@@ -72,14 +72,14 @@ The finished app will be deployed on Render.com. I will connect my GitHub reposi
 
 The wireframes below were sketched out before building began to plan the layout of the key pages. They cover the Home page, the Recipes page, and the Profile page as these have the most complex layouts. Simpler pages like About, Login, and Sign Up were straightforward enough not to need wireframes.
 
-Home Page
+### Home Page
 
 ![Home Page Wireframe](../static/images/wireframes/Home_page.png)
 
-Recipes Page
+### Recipes Page
 
 ![Recipes Page Wireframe](../static/images/wireframes/Recipes_page.png)
 
-Profile Page
+### Profile Page
 
 ![Profile Page Wireframe](../static/images/wireframes/Profile_page.png)
