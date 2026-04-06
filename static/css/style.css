@@ -17,7 +17,9 @@ body {
 }
 
 .icon {
-    background: url("/static/images/icon.png");
+    width: 40px;
+    height: 40px;
+    background: url("/static/images/icon.png") no-repeat center/contain;
 }
 
 /* Navbar */
