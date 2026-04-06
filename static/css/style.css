@@ -1,3 +1,4 @@
+/* Reset */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -12,9 +13,10 @@ body {
     font-family: 'Lato', sans-serif;
     background-color: #f4f4f4;
     color: #2c2c2c;
+    padding-top: 70px;
 }
 
-/* ── Navbar ── */
+/* Navbar */
 .navbar {
     position: fixed;
     top: 0;
@@ -35,18 +37,20 @@ body {
     font-family: 'Oswald', sans-serif;
     font-size: 1.6rem;
     font-weight: 600;
-    letter-spacing: 1px;
+}
+
+.navbar-links {
+    display: flex;
+    gap: 15px;
 }
 
 .navbar-links a {
     color: #fff;
     text-decoration: none;
-    margin: 0 0.8rem;
     font-weight: 600;
-    font-size: 1rem;
     padding: 0.4rem 0.8rem;
     border-radius: 4px;
-    transition: background-color 0.3s ease, transform 0.3s ease;
+    transition: 0.3s;
 }
 
 .navbar-links a:hover {
@@ -54,20 +58,18 @@ body {
     transform: scale(1.05);
 }
 
-/* ── Hamburger ── */
+/* Hamburger */
 .hamburger {
     display: none;
+    font-size: 1.8rem;
+    color: #fff;
     background: none;
     border: none;
-    color: #fff;
-    font-size: 1.8rem;
     cursor: pointer;
 }
 
-/* ── Mobile Menu ── */
+/* Mobile Menu */
 .mobile-menu {
-    display: flex;
-    flex-direction: column;
     position: fixed;
     top: 0;
     right: -250px;
@@ -75,8 +77,10 @@ body {
     height: 100%;
     background-color: olivedrab;
     padding: 4rem 2rem;
-    z-index: 999;
+    display: flex;
+    flex-direction: column;
     transition: right 0.3s ease;
+    z-index: 999;
 }
 
 .mobile-menu.open {
@@ -86,74 +90,51 @@ body {
 .mobile-menu a {
     color: #fff;
     text-decoration: none;
-    font-size: 1.1rem;
     font-weight: 600;
     padding: 0.8rem 0;
     border-bottom: 1px solid rgba(255,255,255,0.2);
-    transition: color 0.3s ease;
 }
 
-.mobile-menu a:hover {
-    color: rgb(102, 41, 13);
-}
-
-/* ── Footer ── */
-.footer {
-    background-color: olivedrab;
-    color: #fff;
+/* Hero */
+.hero {
+    height: 50vh;
+    max-height: 400px;
+    background: url('/static/images/hero.png') center/cover no-repeat;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     text-align: center;
-    padding: 1.5rem 2rem;
-    margin-top: 4rem;
+    color: white;
 }
 
-.footer nav a {
-    color: #fff;
-    text-decoration: none;
-    margin: 0 0.8rem;
-    font-size: 0.9rem;
-    transition: color 0.3s ease;
-}
-
-.footer nav a:hover {
-    color: rgb(102, 41, 13);
-}
-
-/* ── Headings ── */
+/* Headings */
 h1 {
     font-family: 'Oswald', sans-serif;
-    font-size: 3em;
-    color: #333;
-    font-weight: 600;
-    text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.2);
+    font-size: 2.5rem;
+    text-shadow: 2px 2px 5px rgba(0,0,0,0.4);
 }
 
 h2 {
     font-family: 'Oswald', sans-serif;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-    font-weight: 600;
     text-align: center;
-    margin: 0.5em 0;
-    font-size: 2em;
+    margin: 1rem 0;
 }
 
 p {
-    font-family: 'Lato', sans-serif;
-    font-weight: 400;
     line-height: 1.6;
-    margin-top: 1em;
+    margin-top: 1rem;
 }
 
-.hero {
-    height: 50vh;
-    max-height: 400px;
-    background: url('../static/images/hero.png');
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
+/* Footer */
+.footer {
+    background-color: olivedrab;
+    color: #fff;
+    text-align: center;
+    padding: 1.5rem;
+    margin-top: 3rem;
 }
 
-/* ── Responsive ── */
+/* Responsive */
 @media (max-width: 768px) {
     .navbar-links {
         display: none;
