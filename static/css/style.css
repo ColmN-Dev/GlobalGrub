@@ -44,8 +44,8 @@ body {
     text-decoration: none;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
     font-family: 'Oswald', sans-serif;
-    font-size: 1.6rem;
-    font-weight: 600;
+    font-size: 2em;
+    
 }
 
 .navbar-links {
