@@ -146,7 +146,7 @@ p {
 .hero {
     height: 50vh;
     max-height: 400px;
-    background: url('/static/images/hero.jpg') center/cover no-repeat;
+    background: url('../static/images/hero.png');
     display: flex;
     align-items: center;
     justify-content: center;
