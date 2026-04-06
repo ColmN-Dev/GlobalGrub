@@ -16,6 +16,10 @@ body {
     padding-top: 70px;
 }
 
+.icon {
+    background: url("/static/images/icon.png");
+}
+
 /* Navbar */
 .navbar {
     position: fixed;
