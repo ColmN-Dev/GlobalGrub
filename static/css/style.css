@@ -30,7 +30,7 @@ body {
     top: 0;
     left: 0;
     width: 100%;
-    background: url("/static/images/banner.png") center/cover no-repeat;
+    background: url("/static/images/banner.png") center/contain no-repeat;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -44,7 +44,7 @@ body {
     text-decoration: none;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
     font-family: 'Oswald', sans-serif;
-    font-size: 5em;
+    font-size: 3em;
     
 }
 
@@ -84,7 +84,7 @@ body {
     right: -250px;
     width: 250px;
     height: 100%;
-    background: url("/static/images/banner.png") center/cover no-repeat;
+    background: url("/static/images/banner.png") center/contain no-repeat;
     padding: 4rem 2rem;
     display: flex;
     flex-direction: column;
@@ -121,27 +121,32 @@ body {
 .hero-text {
     position: absolute;
     text-align: center;
-    font-size: 40px;
-    background-color:  rgba(0, 0, 0, 0.4);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #fff;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 10px 20px;
     border-radius: 8px;
-    padding: 20px;
+    font-family: 'Oswald', sans-serif;
+    font-size: 3em;
 }
 
 .hero p {
-    font-size: 2rem;
+    font-size: 2em;
     font-weight: bold;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 /* Headings */
 h1 {
-    color: #333;
+    color: #000;
     font-style: italic;
     font-weight: bold;
     text-align: left;
     padding: 10px;
     font-family: 'Oswald', sans-serif;
-    font-size: 2.5rem;
+    font-size: 2.5em;
     text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4);
 }
 
@@ -159,7 +164,7 @@ p {
 
 /* Footer */
 .footer {
-    background: url("/static/images/banner.png") center/cover no-repeat;
+    background: url("/static/images/banner.png") center/contain no-repeat;
     color: #fff;
     text-align: center;
     padding: 1.5em;
