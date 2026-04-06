@@ -8,3 +8,11 @@ hamburger.addEventListener('click', () => {
 function toggleMenu() {
     document.querySelector('.mobile-menu').classList.toggle('open');
 }
+
+const links = mobileMenu.querySelectorAll("a");
+
+links.forEach(link => {
+    link.addEventListener("click", () => {
+        mobileMenu.classList.remove("open");
+    });
+});
