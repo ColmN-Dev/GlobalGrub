@@ -26,7 +26,6 @@ GlobalGrub is a Flask web application built to allow users to discover and brows
 - PlayStation-style avatar picker modal with preset food-themed icons
 - Guest browsing with limited access — full features unlocked on login
 - Dynamic navbar that swaps between Sign Up/Login and Profile/Logout based on session state
-- Cookie consent banner on first visit
 - Responsive design with a slide out mobile menu
 
 ---

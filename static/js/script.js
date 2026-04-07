@@ -1,18 +1,15 @@
-const hamburger = document.getElementById('hamburger');
-const mobileMenu = document.getElementById('mobileMenu');
+
+// Hamburger menu toggle
+const hamburger = document.querySelector('.hamburger');
+const mobileMenu = document.querySelector('.mobile-menu');
 
 hamburger.addEventListener('click', () => {
     mobileMenu.classList.toggle('open');
+    document.body.classList.toggle('menu-open');
 });
 
-function toggleMenu() {
-    document.querySelector('.mobile-menu').classList.toggle('open');
-}
-
-const links = mobileMenu.querySelectorAll("a");
-
-links.forEach(link => {
-    link.addEventListener("click", () => {
-        mobileMenu.classList.remove("open");
-    });
+mobileMenu.querySelectorAll('a').forEach(link => {
+  link.addEventListener('click', () => {
+    mobileMenu.classList.remove('open');
+  });
 });
