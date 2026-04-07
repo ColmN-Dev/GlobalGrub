@@ -121,21 +121,21 @@ The wireframes below were created before development to plan the layout and stru
 ---
 
 ## Home Page Wireframe 
-![Home Page Wireframe](../images/wireframes/Home_page.png)
+![Home Page Wireframe](../static/images/wireframes/Home_page.png)
 
 This wireframe shows the structure of the landing page, including the navbar, hero section, featured regions, and footer. It was used to plan the overall layout and first impression of the application.
 
 ---
 
 ## Recipes Page Wireframe 
-![Recipes Page Wireframe](../images/wireframes/Recipes_page.png)
+![Recipes Page Wireframe](../static/images/wireframes/Recipes_page.png)
 
 This wireframe focuses on the main functionality of the app. It includes the search bar for API integration, the recipe results area, and the carousel section used to display curated dishes by region.
 
 ---
 
 ## Profile Page Wireframe
-![Profile Page Wireframe](../images/wireframes/Profile_page.png)
+![Profile Page Wireframe](../static/images/wireframes/Profile_page.png)
 
 This wireframe outlines the user dashboard, including the avatar display, user information, and account management features such as editing details and logging out.
 
