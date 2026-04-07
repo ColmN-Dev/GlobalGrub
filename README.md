@@ -1,5 +1,15 @@
 # GlobalGrub
 
+## Github Repository URL 
+
+https://Github.com/ColmN-Dev/GlobalGrub
+
+## Live Render Site URL
+
+https://globalgrub-tsyf.onrender.com
+
+---
+
 ## Overview
 
 GlobalGrub is a Flask web application built to allow users to discover and browse recipes from cuisines around the world. It includes user authentication, a profile system with a custom avatar picker, and the ability to save favourite recipes. The focus of the project is on combining a Python backend with a polished, fully custom frontend UI.
