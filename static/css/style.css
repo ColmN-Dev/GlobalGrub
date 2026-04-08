@@ -26,6 +26,7 @@ body {
 }
 
 /* Navbar */
+
 .navbar {
     position: fixed;
     top: 0;
@@ -84,6 +85,7 @@ body {
 }
 
 /* Hamburger */
+
 .hamburger {
     display: none;
     flex-direction: column;
@@ -104,6 +106,7 @@ body {
 }
 
 /* Mobile Menu */
+
 .mobile-menu {
     position: fixed;
     top: 0;
@@ -183,7 +186,45 @@ body.menu-open {
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
-/* Headings */
+/* Marquee */
+
+.marquee-label {
+    text-align: center;
+    font-size: 2em;
+    margin-top: 2em;
+    font-style: italic;
+}
+
+.marquee-container {
+    width: 100%;
+    overflow: hidden;
+    background-color: rgba(0,0,0,0.7);
+    margin: 5em 0;
+    padding: 1em 0;
+}
+
+.dynamic-marquee {
+    display: flex;
+    width: max-content;
+    animation: scroll 15s linear infinite;
+}
+
+.dynamic-marquee img {
+    flex-shrink: 0;
+    height: 200px;
+    width: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-right: 0.5em;
+}
+
+@keyframes scroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+/* Headings and Paragraphs */
+
 h1 {
     color: #fff;
     font-style: italic;
@@ -221,6 +262,7 @@ p {
 }
 
 /* Footer */
+
 .footer {
     box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.3);
     color: #fff;
@@ -243,7 +285,9 @@ p {
     margin-top: 1em;
     font-size: 1em;
 }
+
 /* Responsive Design */
+
 @media (max-width: 768px) {
     .navbar-links {
         display: none;
