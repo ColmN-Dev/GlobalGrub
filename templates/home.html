@@ -2,36 +2,65 @@
 
 {% block content %}
     <main>
-        <h1>Welcome to Global Grub</h1>
-        <div class="hero-container">
-            <div class="hero">
-                <p class="hero-text">Find Your Favourite Food From Across the Globe</p>
-            </div>
-        </div>
-        <p class="marquee-label">Discover Delicious Recipes</p>
-        <div class="marquee-container">
-            <div class="dynamic-marquee">
-                <img src="{{ url_for('static', filename='images/food1.png') }}" alt="Dish 1">
-                <img src="{{ url_for('static', filename='images/food2.png') }}" alt="Dish 2">
-                <img src="{{ url_for('static', filename='images/food3.png') }}" alt="Dish 3">
-                <img src="{{ url_for('static', filename='images/food4.png') }}" alt="Dish 4">
-                <img src="{{ url_for('static', filename='images/food1.png') }}" alt="Dish 1">
-                <img src="{{ url_for('static', filename='images/food2.png') }}" alt="Dish 2">
-                <img src="{{ url_for('static', filename='images/food3.png') }}" alt="Dish 3">
-                <img src="{{ url_for('static', filename='images/food4.png') }}" alt="Dish 4">
-                <img src="{{ url_for('static', filename='images/food1.png') }}" alt="Dish 1">
-                <img src="{{ url_for('static', filename='images/food2.png') }}" alt="Dish 2">
-                <img src="{{ url_for('static', filename='images/food3.png') }}" alt="Dish 3">
-                <img src="{{ url_for('static', filename='images/food4.png') }}" alt="Dish 4">
-                <img src="{{ url_for('static', filename='images/food1.png') }}" alt="Dish 1">
-                <img src="{{ url_for('static', filename='images/food2.png') }}" alt="Dish 2">
-                <img src="{{ url_for('static', filename='images/food3.png') }}" alt="Dish 3">
-                <img src="{{ url_for('static', filename='images/food4.png') }}" alt="Dish 4">
-            </div>
-        </div>
 
-        <a href="{{ url_for('static', filename='images/food1.png') }}" <img src="{{ url_for('static', filename='images/food1.png') }}"
-        alt="Dish 1">
-        </a>
+        <section>
+            <h1>Welcome to Global Grub</h1>
+            <div class="hero-container">
+                <div class="hero">
+                    <p class="hero-text">Find Your Favourite Food From Across the Globe</p>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <p class="marquee-label">Discover Delicious Recipes</p>
+            <div class="marquee-container">
+                <div class="dynamic-marquee">
+                    <img src="{{ url_for('static', filename='images/food1.png') }}" alt="Dish 1">
+                    <img src="{{ url_for('static', filename='images/food2.png') }}" alt="Dish 2">
+                    <img src="{{ url_for('static', filename='images/food3.png') }}" alt="Dish 3">
+                    <img src="{{ url_for('static', filename='images/food4.png') }}" alt="Dish 4">
+                    <img src="{{ url_for('static', filename='images/food1.png') }}" alt="Dish 1">
+                    <img src="{{ url_for('static', filename='images/food2.png') }}" alt="Dish 2">
+                    <img src="{{ url_for('static', filename='images/food3.png') }}" alt="Dish 3">
+                    <img src="{{ url_for('static', filename='images/food4.png') }}" alt="Dish 4">
+                    <img src="{{ url_for('static', filename='images/food1.png') }}" alt="Dish 1">
+                    <img src="{{ url_for('static', filename='images/food2.png') }}" alt="Dish 2">
+                    <img src="{{ url_for('static', filename='images/food3.png') }}" alt="Dish 3">
+                    <img src="{{ url_for('static', filename='images/food4.png') }}" alt="Dish 4">
+                    <img src="{{ url_for('static', filename='images/food1.png') }}" alt="Dish 1">
+                    <img src="{{ url_for('static', filename='images/food2.png') }}" alt="Dish 2">
+                    <img src="{{ url_for('static', filename='images/food3.png') }}" alt="Dish 3">
+                    <img src="{{ url_for('static', filename='images/food4.png') }}" alt="Dish 4">
+                </div>
+            </div>
+        </section>
+
+        
+        <section>
+            <p class="region-label">Explore Recipes by Region</p>
+            <div class="region-link">
+            <a href="{{ url_for('recipes', region='american') }}" class="region-card">
+                <span class="region-name">American</span>
+                <img src="{{ url_for('static', filename='images/food1.png') }}" alt="American Food">
+            </a>
+
+            <a href="{{ url_for('recipes', region='european') }}" class="region-card"> 
+                <span class="region-name">European</span>
+                <img src="{{ url_for('static', filename='images/food2.png') }}" alt="European Food">
+            </a>
+
+            <a href="{{ url_for('recipes', region='asian') }}" class="region-card">
+                <span class="region-name">Asian</span>
+                <img src="{{ url_for('static', filename='images/food3.png') }}" alt="Asian Food">
+            </a>
+
+            <a href="{{ url_for('recipes', region='all') }}" class="region-card"> 
+                <span class="region-name">All Regions</span>
+                <img src="{{ url_for('static', filename='images/food4.png') }}" alt="All Regions">
+            </a>
+            </div>
+        </section>
+
     </main>
 {% endblock %}
