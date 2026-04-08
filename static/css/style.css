@@ -198,7 +198,7 @@ body.menu-open {
 .marquee-container {
     width: 100%;
     overflow: hidden;
-    background-color: rgba(0,0,0,0.7);
+    background-color: amber;
     margin: 5em 0;
     padding: 1em 0;
 }
