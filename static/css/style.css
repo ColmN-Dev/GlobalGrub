@@ -265,7 +265,7 @@ p {
 /* Footer */
 
 .footer {
-    box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 -10px 20px rgba(0, 0, 0, 0.2);
     color: #fff;
     font-size: 20px;
     text-align: center;
