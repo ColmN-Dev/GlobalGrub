@@ -1,7 +1,19 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <main>
-        <h1>Search for your favourite Recipes</h1>
-    </main>
+<main>
+    <h1>Search for your favourite Recipes</h1>
+
+    <!-- Search form -->
+    <form id="searchForm">
+        <input type="text" id="mealSearch" placeholder="Enter a food..." autocomplete="off">
+        <button type="submit">Search</button>
+    </form>
+
+    <!-- Search results -->
+    <div id="results" class="search-results"></div>
+</main>
+
+
+<script src="{{ url_for('static', filename='js/search.js') }}"></script>
 {% endblock %}
