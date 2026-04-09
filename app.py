@@ -26,7 +26,15 @@ def recipe_detail(id):
 
     meal = data["meals"][0]
 
-    return render_template("recipe.html", meal=meal)
+ingredients = []
+
+for i in range(1, 21):
+    ingredient = meal[f"strIngredient{i}"]
+    measure = meal[f"strMeasure{i}"]
+    if ingredient and ingredient.strip():
+        ingredients.append(f"{measure} {ingredient}")
+
+return render_template("recipe.html", meal=meal)
 
 
 
