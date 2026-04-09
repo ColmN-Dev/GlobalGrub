@@ -1,12 +1,11 @@
 from flask import Flask, render_template
-app = Flask(__name__)
+import requests
 
 app.secret_key = 'globalgrub-dev-key'
 
 @app.route("/")
 def home():
     return render_template("home.html")
-
 
 @app.route("/home")
 def home_alias():
@@ -16,6 +15,19 @@ def home_alias():
 @app.route("/recipes")
 def recipes():
     return render_template("recipes.html")
+
+@app.route("/recipe/<id>")
+def recipe_detail(id):
+    res = requests.get(f"https://www.themealdb.com/api/json/v1/1/lookup.php?i={id}")
+    data = res.json()
+
+    if not data["meals"]:
+        return "Recipe not found", 404
+
+    meal = data["meals"][0]
+
+    return render_template("recipe.html", meal=meal)
+
 
 
 @app.route("/about")
