@@ -1,13 +1,18 @@
 (async () => {
+    
     const searchForm = document.getElementById('searchForm');
     const searchInput = document.getElementById('mealSearch');
     const results = document.getElementById('results');
 
+    // Run search when the form is submitted.
     searchForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const value = searchInput.value.trim();
+
+        // Clear old results before each search.
         results.innerHTML = "";
 
+        // Show a message if the search box is empty.
         if (!value) {
             const p = document.createElement('p');
             p.className = 'empty-search';
@@ -17,9 +22,11 @@
         }
 
         try {
+            // Fetch matching meals from TheMealDB API.
             const res = await fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${value}`);
             const data = await res.json();
 
+            // Handle searches with no matches.
             if (!data.meals) {
                 const p = document.createElement('p');
                 p.className = 'empty-search';
@@ -28,6 +35,7 @@
                 return;
             }
 
+            // Render up to 12 meal cards.
             data.meals.slice(0,12).forEach(meal => {
                 const card = document.createElement('div');
                 card.className = 'meal-card';
@@ -53,6 +61,7 @@
             });
 
         } catch (err) {
+            // Show an error message if the request fails.
             console.error(err);
             results.textContent = "Error fetching data. Try again later.";
         }
