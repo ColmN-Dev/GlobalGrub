@@ -300,6 +300,64 @@ body.menu-open {
     filter: saturate(1.2);
 }
 
+/* Recipe Search Page */
+
+.search-container {
+    max-width: 1000px;
+    margin: 2em auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5em;
+    padding: 0 1em;
+}
+
+.meal-card {
+    position: relative;
+    background-color: rgba(0,0,0,0.5);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    transition: transform 0.3s ease, filter 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+    text-decoration: none;
+    color: #fff;
+}
+
+.meal-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.5s ease, filter 0.5s ease;
+}
+
+.meal-card:hover {
+    transform: translateY(-10px);
+    filter: saturate(1.2);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.5);
+}
+
+.meal-name {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    font-weight: bold;
+    padding: 10px 0;
+    background: rgba(0,0,0,0.6);
+    font-family: 'Cinzel', sans-serif;
+    font-size: 1.1em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+@media (max-width: 768px) {
+    .meal-card img {
+        height: 150px;
+    }
+}
+
 /* Headings and Paragraphs */
 
 h1 {
