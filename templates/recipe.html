@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>{{ meal.strMeal }}</h1>
+
+<img src="{{ meal.strMealThumb }}" alt="{{ meal.strMeal }}">
+
+<p><strong>Region:</strong> {{ meal.strArea }}</p>
+<p><strong>Category:</strong> {{ meal.strCategory }}</p>
+
+<h2>Instructions</h2>
+<p>{{ meal.strInstructions }}</p>
+
+<h2>Ingredients</h2>
+<ul>
+  {% for item in ingredients %}
+    <li>{{ item }}</li>
+  {% endfor %}
+</ul>
+
+{% endblock %}
