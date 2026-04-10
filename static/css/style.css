@@ -488,7 +488,7 @@ body.menu-open {
 .meal-instructions {
     padding: 1em;
     margin: 2em 1em;
-    backdrop-filter: blur(5px);
+    font-size: 1.2em;
 }
 
 .meal-ingredients {
