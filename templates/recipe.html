@@ -4,19 +4,54 @@
 
 <h1>{{ meal.strMeal }}</h1>
 
-<img src="{{ meal.strMealThumb }}" alt="{{ meal.strMeal }}">
 
+<a class="back-button" href="{{ url_for('recipes') }}">↩ Back to Recipes</a>
+
+
+<img src="{{ meal.strMealThumb }}" alt="{{ meal.strMeal }}" class="meal-image">
+
+<div class="meal-details">
 <p><strong>Region:</strong> {{ meal.strArea }}</p>
 <p><strong>Category:</strong> {{ meal.strCategory }}</p>
+</div>
 
+{% if meal.strYoutube %}
+    <h2>Video Tutorial</h2>
+    <div class="video-container">
+    <iframe
+        src="https://www.youtube.com/embed/{{ meal.strYoutube.split('v=')[1] }}" 
+        frameborder="0" 
+        allowfullscreen>
+    </iframe>
+    </div>
+
+{% else %}
+    <h2>Video Tutorial</h2>
+    <p>No video tutorial available for this recipe.</p>
+{% endif %}
+
+<div class="meal-instructions">
 <h2>Instructions</h2>
 <p>{{ meal.strInstructions }}</p>
+</div>
+
 
 <h2>Ingredients</h2>
-<ul>
-  {% for item in ingredients %}
-    <li>{{ item }}</li>
-  {% endfor %}
-</ul>
+<div class="meal-ingredients">
+<table>
+    <tr>
+        <th>Ingredient</th>
+        <th>Measure</th>
+    </tr>
+    {% for i in range(1, 21) %}
+        {% if meal['strIngredient' + i|string] %}
+            <tr>
+                <td>{{ meal['strIngredient' + i|string] }}</td>
+                <td>{{ meal['strMeasure' + i|string] }}</td>
+            </tr>
+        {% endif %}
+    {% endfor %}
+</table>
+</div>
 
 {% endblock %}

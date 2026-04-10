@@ -17,6 +17,10 @@ body {
     padding-top: 70px;
 }
 
+html, body {
+    overflow-x: hidden;
+}
+
 .icon {
     width: 75px;
     height: 75px;
@@ -77,11 +81,12 @@ body {
     transition: 0.3s;
     font-family: 'Cinzel', sans-serif;
     font-style: italic;
+    transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out;
 }
 
 .navbar-links a:hover {
     background-color: rgba(255, 255, 255, 0.2);
-    transform: scale(1.05);
+    transform: translateY(-5px);
 }
 
 /* Hamburger */
@@ -302,60 +307,215 @@ body.menu-open {
 
 /* Recipe Search Page */
 
-.search-container {
-    max-width: 1000px;
+#mealSearch {
+    max-width: 600px;
+    margin: 2em auto;
+    display: block;
+    padding: 0.5em 1em;
+    font-size: 1.5em;
+    border: none;
+    border-radius: 4px;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    font-family: 'Cinzel', sans-serif;
+    font-style: italic;
+    backdrop-filter: blur(5px);
+    transition: background-color 0.3s ease-in-out;
+}
+
+#mealSearch::placeholder {
+    color: #fff;
+}
+
+#mealSearch:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    outline: none;
+}
+
+#clear-button {
+    padding: 0.5em 1em;
+    font-size: 1.5em;
+    font-weight: bold;
+    display: block;
+    margin: 2em auto;
+    color: #fff;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out;
+    font-family: 'Cinzel', sans-serif;
+    font-style: italic;
+}
+
+#clear-button:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-5px);
+}
+
+#submit-button {
+    padding: 0.5em 1em;
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #fff;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out;
+    font-family: 'Cinzel', sans-serif;
+    font-style: italic;
+    display: block;
+    margin: 2em auto;
+}
+
+#submit-button:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-5px);
+}
+
+.search-results {
+    max-width: 1200px;
     margin: 2em auto;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 1.5em;
-    padding: 0 1em;
+    padding: 0 0.5em;
+}
+
+.empty-search {
+    font-size: 2em;
+}
+
+.back-button {
+    display: block;
+    font-size: 1.2em;
+    text-align: center;
+    text-decoration: none;
+    width: fit-content;
+    color: #fff;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 0.6em 1.2em;
+    border-radius: 6px;
+    backdrop-filter: blur(5px);
+    font-family: 'Cinzel', sans-serif;
+    transition: 0.3s ease-in-out;
+    margin: 2em auto;
+}
+
+.back-button:hover {
+    transform: translateY(-10px);
+    background-color: rgba(255, 255, 255, 0.2);
 }
 
 .meal-card {
-    position: relative;
+    display: block;
     background-color: rgba(0,0,0,0.5);
     border-radius: 12px;
     overflow: hidden;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-    transition: transform 0.3s ease, filter 0.3s ease, box-shadow 0.3s ease;
-    cursor: pointer;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
     text-decoration: none;
     color: #fff;
+    font-size: 1.2em;
+    font-weight: bold;
+    padding: 0;
+    text-align: center;
+    font-family: 'Cinzel', sans-serif;
+    font-style: italic;
+    backdrop-filter: blur(5px);
 }
 
 .meal-card img {
     width: 100%;
-    height: 200px;
+    height: 180px;
     object-fit: cover;
     display: block;
-    transition: transform 0.5s ease, filter 0.5s ease;
 }
 
 .meal-card:hover {
-    transform: translateY(-10px);
-    filter: saturate(1.2);
+    transform: translateY(-6px);
     box-shadow: 0 12px 25px rgba(0,0,0,0.5);
 }
 
 .meal-name {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    text-align: center;
-    font-weight: bold;
-    padding: 10px 0;
-    background: rgba(0,0,0,0.6);
-    font-family: 'Cinzel', sans-serif;
-    font-size: 1.1em;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    word-wrap: break-word;
+    padding: 0.8em;
 }
 
-@media (max-width: 768px) {
-    .meal-card img {
-        height: 150px;
-    }
+.meal-image {
+    object-fit: contain;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 600px;
+    margin: 2em auto;
+    display: flex;
+    justify-content: center;
+    transition: filter 0.5s ease-in-out;
+}
+
+.meal-image:hover {
+    filter: brightness(0.5);
+}
+
+.meal-details {
+    max-width: 800px;
+    margin: 2em auto;
+    border-radius: 8px;
+    padding: 1em;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 1.2em;
+}
+
+.video-container {
+    max-width: 800px;
+    margin: 2em auto;
+}
+
+.video-container iframe {
+    width: 100%;
+    height: 500px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    transition: filter 0.3s ease-in-out;
+}
+
+.video-container iframe:hover {
+    filter: brightness(0.8);
+}
+
+.meal-instructions {
+    padding: 1em;
+    margin: 2em 1em;
+    backdrop-filter: blur(5px);
+}
+
+.meal-ingredients {
+    padding: 2em 1em;
+    margin: 2em;
+    font-size: 1.2em;
+    display: flex;
+    justify-content: center;
+    text-decoration: none;
+    background-color: rgba(0, 0, 0, 0.5);
+    font-style: italic;
+    border-radius: 8px;
+    line-height: 1.6;
+    backdrop-filter: blur(5px);
+}   
+
+.meal-ingredients table {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    border-collapse: collapse;
+    text-align: center;
+}
+
+.meal-ingredients th, .meal-ingredients td {
+    padding: 0.8em;
+    border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 /* Headings and Paragraphs */
@@ -377,6 +537,7 @@ h2 {
     text-align: center;
     margin-top: 2em;
     padding: 1em;
+    font-size: 2em;
 }
 
 p {
@@ -497,6 +658,65 @@ p {
 
     .region-card::after {
         background: linear-gradient(to top, rgba(0,0,0,0.5), transparent 60%);
+    }
+
+    #mealSearch {
+    font-size: 1.2em;
+    }
+
+    #submit-button {
+        font-size: 1.2em;
+    }
+
+    .meal-name {
+        word-break: break-word;
+        padding: 0.8em;
+        font-size: 1rem;
+    }
+
+    .search-results {
+        padding: 0 0.5em;
+    }
+
+    .video-container iframe {
+        height: 400px;
+        margin: 2em auto;
+    }
+
+    .meal-card img {
+        height: 140px;
+    }
+
+    .meal-card {
+        padding: 0;
+    }
+
+     .meal-image {
+        max-width: 100%;
+        height: auto;
+    }
+
+     .meal-details {
+        padding: 0.5em;
+        font-size: 1.2em;
+    }
+
+    .meal-ingredients table {
+        width: 100%;
+        max-width: 400px;
+    }
+
+
+     h1 {
+        font-size: 2em;
+    }
+
+     h2 {
+        font-size: 1.8em;
+    }
+
+     p {
+        font-size: 1.5em;
     }
 
 }

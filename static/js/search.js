@@ -4,6 +4,7 @@
     const searchInput = document.getElementById('mealSearch');
     const results = document.getElementById('results');
 
+
     // Run search when the form is submitted.
     searchForm.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -66,4 +67,42 @@
             results.textContent = "Error fetching data. Try again later.";
         }
     });
+
+            // Function to clear search input and results.
+            function clearSearch() {
+            input.value = "";
+            results.innerHTML = "";
+            clearBtn.style.display = "none";
+}
+
+            const clearBtn = document.getElementById("clear-button");
+            const input = document.getElementById("mealSearch");
+            
+            // Hide the clear button before search and show it only when there is input.
+            clearBtn.style.display = "none";
+
+            // Allow clear button to appear when user types in the search box and hide it when the input is empty.
+            input.addEventListener("input", () => {
+            if (input.value.trim() !== "") {
+                clearBtn.style.display = "block";
+            } else {
+                clearBtn.style.display = "none";
+            }
+        });
+
+            clearBtn.addEventListener("click", clearSearch);
+
+            // Press Escape key to clear search input and results.
+            input.addEventListener("keydown", (e) => {
+            if (e.key === "Escape") {
+                clearSearch();
+            }
+        });
+
+
+            // Clear search input and results when the clear button is clicked.
+            document.getElementById('clear-button').addEventListener('click', (e) => {
+                clearSearch();
+            });
+
 })();
