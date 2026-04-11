@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 import requests
 
 app = Flask(__name__)
@@ -8,19 +8,34 @@ app.secret_key = 'globalgrub-dev-key'
 def home():
     return render_template("home.html")
 
-@app.route("/home")
-def home_alias():
-    return render_template("home.html")
-
 @app.route("/recipes")
 def recipes():
-    return render_template("recipes.html")
+    search = request.args.get("search")
+    region = request.args.get("region")
+    
+    meals = []
+    
+   # Show results based on search and region parameters or show all
+    if region:
+        url = f"https://www.themealdb.com/api/json/v1/1/filter.php?a={region}"    
+        meals = requests.get(url).json().get("meals") or []
+    elif search:
+        url = f"https://www.themealdb.com/api/json/v1/1/search.php?s={search}"
+        meals = requests.get(url).json().get("meals") or []
+    else:
+        meals = []
+            
+    # Pass meals and region to template
+    return render_template("recipes.html", meals=meals, region=region, search=search)
 
 @app.route("/recipe/<id>")
 def recipe_detail(id):
     # Fetch recipe from TheMealDB
-    res = requests.get(f"https://www.themealdb.com/api/json/v1/1/lookup.php?i={id}")
-    data = res.json()
+    url = f"https://www.themealdb.com/api/json/v1/1/lookup.php?i={id}"
+    # Send HTTP request to TheMealDB API
+    response = requests.get(url)
+    # Convert response to JSON
+    data = response.json()
 
     if not data["meals"]:
         return "Recipe not found", 404

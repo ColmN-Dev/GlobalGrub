@@ -17,9 +17,6 @@ body {
     padding-top: 70px;
 }
 
-html, body {
-    overflow-x: hidden;
-}
 
 .icon {
     width: 75px;
@@ -238,6 +235,8 @@ body.menu-open {
     100% { transform: translateX(-50%); }
 }
 
+/* Region Cards */
+
 .region-label {
     text-align: center;
     font-size: 2em;
@@ -245,31 +244,45 @@ body.menu-open {
     font-style: italic;
 }
 
+.region-group-label {
+    font-size: 1.5rem;
+    margin: 1em  0.5em;
+}
+
+.region-group {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 200px));
+    justify-content: center;
+    gap: 1em;   
+    margin: 2em auto;
+    max-width: 1000px;
+    padding: 0 1em;
+}
+
 .region-name {
     position: absolute;
-    bottom: 1em;
+    top: 50%;
     left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
     font-weight: bold;
-    transform: translateX(-50%);
     color: #fff;
-    background: none;
-    padding: 8px 16px;
-    border-radius: 4px;
+    padding: 10px;
     font-size: 1.2em;
     font-family: 'Cinzel', sans-serif;
-    white-space: nowrap;
-    z-index: 1;
+    z-index: 2;
     pointer-events: none;
-    width: fit-content;
 }
 
 .region-card {
     position: relative;
     display: block;
     text-decoration: none;
-    border-radius: 8px;
-    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 12px;
+    overflow: hidden;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    transition: transform 0.25s ease-in-out, box-shadow 0.25s ease-in-out;
 
 }
 
@@ -281,28 +294,27 @@ body.menu-open {
     pointer-events: none;
 }
 
-.region-link {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    margin: 2em auto;
-    gap: 1em;
-    max-width: 1000px;
-    padding: 0 1em;
-}
-
 .region-card img {
     width: 100%;
-    height: 200px;
+    height: 180px;
     object-fit: cover;
     display: block;
-    border-radius: 12px;
-    transition: transform 0.5s ease-in-out, filter 0.5s ease;
+    transition: transform 0.3s ease-in-out;
 }
 
-.region-card:hover {
-    transform: translateY(-10px);
+.region-card:hover img {
+    transform: scale(1.1);
     box-shadow: 0 12px 25px rgba(0,0,0,0.5);
-    filter: saturate(1.2);
+}
+
+.all-container {
+    display: flex;
+    justify-content: center;
+    margin: 2em 0;
+}
+
+.all-card {
+    width: 250px;
 }
 
 /* Recipe Search Page */
@@ -330,6 +342,13 @@ body.menu-open {
 #mealSearch:hover {
     background-color: rgba(255, 255, 255, 0.2);
     outline: none;
+}
+
+#search-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1em;
 }
 
 #clear-button {
@@ -376,6 +395,16 @@ body.menu-open {
     transform: translateY(-5px);
 }
 
+.active-filter {
+    text-align: center;
+    font-size: 2em;
+    margin: 2em;
+    padding: 0.5em;
+    background: rgba(0,0,0,0.5);
+    border-radius: 6px;
+    font-style: italic;
+}
+
 .search-results {
     max-width: 1200px;
     margin: 2em auto;
@@ -411,9 +440,6 @@ body.menu-open {
 }
 
 .meal-card {
-    display: block;
-    background-color: rgba(0,0,0,0.5);
-    border-radius: 12px;
     overflow: hidden;
     transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
     text-decoration: none;
@@ -424,7 +450,6 @@ body.menu-open {
     text-align: center;
     font-family: 'Cinzel', sans-serif;
     font-style: italic;
-    backdrop-filter: blur(5px);
 }
 
 .meal-card img {
@@ -432,11 +457,11 @@ body.menu-open {
     height: 180px;
     object-fit: cover;
     display: block;
+    transition: transform 0.3s ease-in-out;
 }
 
 .meal-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 12px 25px rgba(0,0,0,0.5);
+    transform: translateY(-5px);
 }
 
 .meal-name {
@@ -444,9 +469,12 @@ body.menu-open {
     padding: 0.8em;
 }
 
+#meal-name {
+    border-radius: none;
+}
+
 .meal-image {
     object-fit: contain;
-    border-radius: 12px;
     width: 100%;
     max-width: 600px;
     margin: 2em auto;
@@ -455,14 +483,9 @@ body.menu-open {
     transition: filter 0.5s ease-in-out;
 }
 
-.meal-image:hover {
-    filter: brightness(0.5);
-}
-
 .meal-details {
     max-width: 800px;
     margin: 2em auto;
-    border-radius: 8px;
     padding: 1em;
     font-family: 'Times New Roman', Times, serif;
     font-size: 1.2em;
@@ -645,14 +668,18 @@ p {
         width: 150px;
     }
 
+    .region-group {
+        grid-template-columns: repeat((2, 1fr));
+        max-width: 100%;
+    }
+
      .region-card img {
         height: 150px;
     }
 
     .region-name {
         font-size: 1em;
-        padding: 6px 12px;
-        bottom: 3em;
+        padding: 6px 10px;
     }
 
     .region-card::after {

@@ -4,15 +4,32 @@
 <main>
     <h1>Search for your favourite Recipes</h1>
 
+    
+
     <!-- Search form -->
-    <form id="searchForm">
-        <input type="text" id="mealSearch" placeholder="Search for recipes..." autocomplete="off">
-        <button type="button" id="clear-button">Clear Results</button>
+    <form action="{{ url_for('recipes') }}" method="GET" id="searchForm">
+        <input type="text" id="mealSearch" name="search" placeholder="Search for recipes..." autocomplete="off">
+        <button type="button" id="clear-button">Clear</button>
         <button type="submit" id="submit-button">Search</button>
     </form>
 
+    {% if region %}
+        <p class="active-filter">Region: {{ region }}</p>
+    {% endif %}
+
+    {% if search %}
+        <p class="active-filter">Search: {{ search }}</p>
+    {% endif %}
+
     <!-- Search results -->
-    <div id="results" class="search-results"></div>
+   <div class="search-results">
+    {% for meal in meals %}
+        <a href="{{ url_for('recipe_detail', id=meal.idMeal) }}" class="meal-card">
+            <p id="meal-name" class="meal-name">{{ meal.strMeal }}</p>
+            <img src="{{ meal.strMealThumb }}">
+        </a>
+    {% endfor %}
+    </div>
 </main>
 
 
