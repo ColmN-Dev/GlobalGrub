@@ -1,191 +1,104 @@
 # GlobalGrub Documentation
 
+Last updated: April 12, 2026
+
 ## Overview
 
-**GlobalGrub** is a Flask web application I built to let users browse and discover recipes from around the world using TheMealDB API. Users can explore meals by region, search for recipes using keywords, and view detailed recipe pages.
-
-I used **Flask (Python)** for the backend, **Jinja templates** for rendering dynamic pages, and minimal JavaScript mainly for small UI interactions.
+GlobalGrub is a Flask web application for exploring recipes from around the world using TheMealDB API. Users can browse recipes by country, search by meal name, and open a full recipe detail page.
 
 ---
 
-## Design Decisions and Theme
+## Current Architecture
 
-- I chose a warm, evening restaurant-style theme because I wanted the site to feel more like a food experience rather than just a recipe database.
-- I used **Cinzel** for headings to give the site a more styled, branded look, and **Times New Roman** for body text because it is simple and readable.
-- I kept the structure focused on how users naturally navigate:
-  - Browse by region
-  - Search for recipes
-  - View recipe details
+The app uses a server-side Flask flow:
 
-- The homepage uses a grid-based region selector, where each card links to filtered recipe pages using Flask URL parameters.
-
-- Each region uses **unique images per country**, improving visual clarity and ensuring accurate representation of each cuisine category.
+- Flask handles routing and data fetching
+- TheMealDB provides recipe data
+- Jinja templates render pages from route data
+- JavaScript is used for small UI interactions only
 
 ---
 
-## Core Application Architecture
+## Current Routes
 
-GlobalGrub is built using a **server-side Flask architecture**, where the backend controls all application logic.
-
-- Flask handles all routing and page rendering.
-- URL parameters (`request.args`) control filtering (search and region).
-- TheMealDB API is used as the external data source.
-- Jinja templates render dynamic content based on data passed from Flask.
-
-This ensures that Flask acts as the single source of truth for application behaviour, with the frontend focused only on display.
+- `/` -> Home page with hero, marquee, and region cards
+- `/countries` -> Lists all MealDB countries (A-Z)
+- `/recipes` -> Search and region results page
+- `/recipe/<id>` -> Single recipe details page
+- `/about`, `/favourites`, `/auth/signup`, `/auth/login`, `/auth/profile` -> Template pages
 
 ---
 
-## Flask Role in the Application
+## Recipes Route Behavior
 
-Flask is responsible for:
+The `/recipes` route supports three input values from query parameters:
 
-- Routing between pages (home, recipes, recipe detail, etc.)
-- Handling user input through URL parameters
-- Fetching data from TheMealDB API
-- Processing and filtering responses
-- Passing data into Jinja templates for rendering
+- `search` -> meal name search
+- `region` -> country/area filter
+- `course` -> `all` or `dessert`
 
-I kept most logic in Flask to maintain consistency and avoid splitting behaviour across frontend and backend.
+Current behavior:
 
----
-
-## Development Process
-
-- I started by setting up Flask with multiple routes and basic templates.
-- I used template inheritance to avoid repeating layout elements like the navbar and footer.
-- I implemented region-based browsing using URL query parameters.
-- I added search functionality through Flask by calling TheMealDB API directly.
-- I improved the UI using grid layouts, hover effects, overlays, and responsive design.
-- Over time, I simplified the backend so Flask became the central controller for all data and filtering logic.
+- If `search` exists, data comes from `search.php?s=...`
+- If `course=dessert` with search, results are narrowed to dessert category
+- If `region` exists, data comes from `filter.php?a=...`
+- If both search and region are empty, a user message is shown
 
 ---
 
-## Challenges Faced
+## Countries Page
 
-The main challenges I faced were integrating backend and frontend features into a single consistent system.
+The `/countries` route calls `list.php?a=list`, extracts `strArea`, removes empty values, and sorts the list alphabetically before rendering.
 
-On the **backend (Flask / Python)** side, the biggest difficulty was handling multiple user states within the `/recipes` route. I needed to support region filtering, valid searches, and empty search submissions all within the same endpoint. Initially, I had issues with incorrect condition ordering and misunderstanding how Flask handles request parameters, which caused inconsistent messages and behaviour. I resolved this by simplifying the logic and ensuring Flask handled all decision-making.
+Each country link points to:
 
-On the **frontend (Jinja, JavaScript, CSS)** side, I had to ensure the templates only displayed data coming from Flask without duplicating logic. This was important for keeping behaviour consistent and avoiding conflicting states between backend and frontend.
+- `/recipes?region=<country>`
 
-I only used **JavaScript** for small UI interactions such as clearing the search input and handling basic form behaviour. The challenge here was making sure these interactions did not interfere with Flask-based routing or page reloads.
-
-For **CSS**, the main issues were layout and responsiveness. I had problems with inconsistent grid behaviour when displaying different numbers of results, as well as image scaling across devices. I resolved this using consistent grid structures, fixed card sizing, and `object-fit: cover`. I also refined media queries to ensure the layout adapted properly across mobile and desktop screens.
-
-Overall, the biggest challenge was getting Flask, Jinja, JavaScript, and CSS to work together cleanly without overlapping responsibilities. Once I moved all logic into Flask and simplified frontend behaviour, the application became much more stable and predictable.
-
----
-
-## Python / Flask Components
-
-Flask manages all application routes and API communication.
-
-### Routes:
-- `/` → Home page  
-- `/recipes` → Search and region filtering  
-- `/recipe/<id>` → Individual recipe page  
-- `/about`, `/favourites`, `/auth/*` → Static pages  
-
----
-
-## Recipe Data Flow
-
-User interactions are controlled through URL parameters:
-
-- Region selection:
-```
-
-/recipes?region=Irish
-
-```
-
-- Search:
-```
-
-/recipes?search=chicken
-
-```
-
-Flask processes these parameters, calls TheMealDB API, and renders results dynamically using Jinja templates.
-
----
-
-## JavaScript Components
-
-JavaScript is used minimally for UI enhancements:
-
-- Mobile navigation toggle
-- Clearing search input
-- Basic form interactions
-
-All core data handling is managed by Flask.
+This gives users a quick way to browse meals by region from one page.
 
 ---
 
 ## Recipe Detail Page
 
-Each recipe is accessed using:
+The `/recipe/<id>` route calls `lookup.php?i=<id>` and renders one meal.
 
-```
+It includes:
 
-/recipe/<id>
+- meal title and metadata
+- image
+- instructions
+- ingredient list
 
-```
-
-This page displays:
-
-- Meal image
-- Title and category
-- Ingredients and measurements
-- Cooking instructions
-- Embedded YouTube video (if available)
-
-All elements are styled using css classes for cross-page consistency 
-
-Ingredients are extracted in Python by looping through API fields (`strIngredient1–20`).
+Ingredients are built by looping through TheMealDB fields `strIngredient1..20` and `strMeasure1..20`.
 
 ---
 
-## Region System
+## Frontend and Styling Notes
 
-### Americas
-- American
-- Canadian
-- Mexican
-- Argentinian
-
-### Europe
-- Italian
-- Spanish
-- Irish
-- Polish
-
-### Asia
-- Chinese
-- Indian
-- Japanese
-- Thai
-
-### Global
-- All Recipes (no filter)
+- Shared layout is handled in `base.html`
+- Main pages extend the base template
+- UI is custom CSS with responsive breakpoints
+- Navbar supports desktop links and a mobile slide-out menu
+- Recipes page uses simple `All` / `Dessert` filter buttons
 
 ---
 
-## Frontend Features
+## Tech Stack
 
-- Marquee image strip built using CSS animations for continuous scrolling effect
-- Region cards using grid layout with hover scaling and overlay text
-- Hero section with themed food imagery and visual emphasis
-- Fully responsive design using media queries
-- Meal cards with fixed sizing and consistent image cropping
+- Python 3
+- Flask
+- Requests
+- Jinja templates
+- HTML/CSS/JavaScript
+- Gunicorn (deployment)
+- Render (hosting)
 
 ---
 
-## Future Improvements
+## Known Gaps / Next Steps
 
-- User authentication system with secure password hashing
-- Favourites system using database storage (SQLite / SQLAlchemy)
-- Improved empty-state and loading UI feedback
-- Deployment using environment variables on a hosting platform
-- User profile system and personalization features
+These are planned but not fully implemented in the current app state:
+
+- complete auth/session flow (including logout handling)
+- persistent favourites storage
+- persistent user profile data

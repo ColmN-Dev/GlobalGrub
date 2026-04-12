@@ -1,10 +1,12 @@
 # GlobalGrub
 
-## Github Repository URL 
+Last updated: April 12, 2026
 
-https://Github.com/ColmN-Dev/GlobalGrub
+## GitHub Repository
 
-## Live Render Site URL
+https://github.com/ColmN-Dev/GlobalGrub
+
+## Live Site
 
 https://globalgrub-tsyf.onrender.com
 
@@ -12,39 +14,67 @@ https://globalgrub-tsyf.onrender.com
 
 ## Overview
 
-GlobalGrub is a Flask web application built to allow users to discover and browse recipes from cuisines around the world. It includes user authentication, a profile system with a custom avatar picker, and the ability to save favourite recipes. The focus of the project is on combining a Python backend with a polished, fully custom frontend UI.
+GlobalGrub is a Flask web app for discovering recipes from around the world using TheMealDB API. Users can browse by country, search by meal name, and open a full recipe details page with ingredients and instructions.
 
 ---
 
-## Features
+## Current Features
 
-- Search functionality using the `TheMealDB` API
-- Curated regional carousel showcasing top dishes from Asian, European, and American cuisines
-- User authentication (sign up, login, logout)
-- Save favourite recipes stored in `SQLite` database
-- Profile page with stats, edit username, change password, and avatar selection
-- PlayStation-style avatar picker modal with preset food-themed icons
-- Guest browsing with limited access — full features unlocked on login
-- Dynamic navbar that swaps between Sign Up/Login and Profile/Logout based on session state
-- Responsive design with a slide out mobile menu
+- Home page with hero section, marquee, and region cards
+- Countries page that lists all available MealDB countries (A-Z)
+- Recipe browsing by region (`/recipes?region=...`)
+- Recipe search by name (`/recipes?search=...`)
+- Simple search filter buttons: `All` and `Dessert`
+- Dessert filter is applied to search results
+- Recipe detail page (`/recipe/<id>`) with ingredients, instructions, and media data when available
+- Responsive layout with desktop navbar and mobile menu
+- About, Favourites, Login, Signup, and Profile pages (template routes)
 
 ---
 
 ## Tech Stack
 
-- Backend: `Flask` (`Python`)
-- Frontend: `HTML`, custom `CSS`, `JavaScript`
-- Database: `SQLite` via `Flask-SQLAlchemy`
-- Deployment: `Render.com`
+- Backend: Python, Flask
+- API: TheMealDB
+- Frontend: HTML, Jinja templates, CSS, JavaScript
+- Deployment: Render (Gunicorn)
 
 ---
 
-## Authentication
+## Project Structure
 
-Authentication is handled using `Flask Sessions`. User data including username, hashed password, and avatar choice is stored in a `SQLite` database managed by `Flask-SQLAlchemy`. Saved favourites are linked to each user via a foreign key relationship between the `Users` and `Favourites` tables.
+- `app.py`
+- `templates/`
+- `templates/auth/`
+- `static/css/`
+- `static/js/`
+- `static/images/`
+- `static/images/wireframes/`
+- `Docs/`
+
+---
+
+## Local Setup
+
+1. Create and activate a virtual environment.
+2. Install requirements:
+	- `pip install -r requirements.txt`
+3. Run the app:
+	- `python app.py`
+4. Open:
+	- `http://127.0.0.1:5000`
+
+---
+
+## Future Improvements
+
+- Full authentication flow (register/login/logout sessions)
+- Persistent favourites storage
+- User profile persistence
+- Additional filters and sorting options
 
 ---
 
 ## Status
 
-This project is currently in development as part of a Python module assignment.
+In development as part of a Python module assignment.
