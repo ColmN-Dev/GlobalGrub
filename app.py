@@ -12,61 +12,66 @@ def home():
 def recipes():
     search = (request.args.get("search") or "").strip()
     region = (request.args.get("region") or "").strip()
-      
+    
     meals = []
     message = None
-    
-    
-   # Empty search term 
-    if "search" in request.args and search == "":
-        message = "Please enter a search term."
-        
-    # Search recipes
-    elif search:
-        url = f"https://www.themealdb.com/api/json/v1/1/search.php?s={search}"
-        meals = requests.get(url).json().get("meals") or []
-        
-        # Handle no results found for search term
-        if not meals:
-            message = f"No results found for: {search}"
-    
-    # Filter by region 
-    elif region:
-        url = f"https://www.themealdb.com/api/json/v1/1/filter.php?a={region}"  
-        meals = requests.get(url).json().get("meals") or []
-        
-        # Handle no results found
-        if not meals:
-            message = "No results found."
-         
 
-    # Pass variables to template 
+    try:
+        # Empty search term
+        if "search" in request.args and search == "":
+            message = "Please enter a search term."
+        
+        # Search by name
+        elif search:
+            url = f"https://www.themealdb.com/api/json/v1/1/search.php?s={search}"
+            response = requests.get(url, timeout=10)
+            data = response.json()
+            meals = data.get("meals") or []
+            
+            if not meals:
+                message = f"No results found for: {search}"
+
+        # Filter by region
+        elif region:
+            url = f"https://www.themealdb.com/api/json/v1/1/filter.php?a={region}"
+            response = requests.get(url, timeout=10)
+            data = response.json()
+            meals = data.get("meals") or []
+            
+            if not meals:
+                message = "No results found."
+
+    except requests.exceptions.RequestException:
+        message = "Could not connect to the recipe database. Please try again later."
+    except Exception:
+        message = "Something went wrong. Please try again."
+
     return render_template("recipes.html", meals=meals, region=region, search=search, message=message)
 
 @app.route("/recipe/<id>")
 def recipe_detail(id):
-    # Fetch recipe from TheMealDB
-    url = f"https://www.themealdb.com/api/json/v1/1/lookup.php?i={id}"
-    # Send HTTP request to TheMealDB API
-    response = requests.get(url)
-    # Convert response to JSON
-    data = response.json()
+    try:
+        url = f"https://www.themealdb.com/api/json/v1/1/lookup.php?i={id}"
+        response = requests.get(url, timeout=10)
+        data = response.json()
 
-    if not data["meals"]:
-        return "Recipe not found", 404
+        if not data.get("meals"):
+            return "Recipe not found", 404
 
-    meal = data["meals"][0]
+        meal = data["meals"][0]
 
-    # Extract ingredients and measures
-    ingredients = []
-    for i in range(1, 21):
-        ingredient = meal.get(f"strIngredient{i}")
-        measure = meal.get(f"strMeasure{i}")
-        if ingredient and ingredient.strip():
-            ingredients.append(f"{measure} {ingredient}")
+        # Extract ingredients
+        ingredients = []
+        for i in range(1, 21):
+            ingredient = meal.get(f"strIngredient{i}")
+            measure = meal.get(f"strMeasure{i}")
+            if ingredient and ingredient.strip():
+                ingredients.append(f"{measure} {ingredient}")
 
-    # Pass ingredients to template
-    return render_template("recipe.html", meal=meal, ingredients=ingredients)
+        return render_template("recipe.html", meal=meal, ingredients=ingredients)
+
+    except Exception:
+        return "Could not load recipe. Please try again later.", 500
 
 @app.route("/about")
 def about():
