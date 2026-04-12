@@ -28,6 +28,7 @@ GlobalGrub is a Flask web app for discovering recipes from around the world usin
 - Dessert filter is applied to search results
 - Recipe detail page (`/recipe/<id>`) with ingredients, instructions, and media data when available
 - Responsive layout with desktop navbar and mobile menu
+- Accessibility improvements (image alt text, ARIA labels, and iframe title)
 - About, Favourites, Login, Signup, and Profile pages (template routes)
 
 ---

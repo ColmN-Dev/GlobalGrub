@@ -8,16 +8,16 @@
 
     <!-- Search form -->
     <form action="{{ url_for('recipes') }}" method="GET" id="searchForm">
-        <input type="text" id="mealSearch" name="search" placeholder="Search for recipes..." autocomplete="off">
+        <input type="text" id="mealSearch" name="search" placeholder="Search for recipes..." autocomplete="off" aria-label="Search recipes by name">
         <div class="course-toggle" aria-label="Course filter">
-            <input type="radio" id="course-all" name="course" value="all" {% if course != 'dessert' %}checked{% endif %}>
+            <input type="radio" id="course-all" name="course" value="all" {% if course != 'dessert' %}checked{% endif %} aria-label="Show all recipe categories">
             <label for="course-all">All</label>
 
-            <input type="radio" id="course-dessert" name="course" value="dessert" {% if course == 'dessert' %}checked{% endif %}>
+            <input type="radio" id="course-dessert" name="course" value="dessert" {% if course == 'dessert' %}checked{% endif %} aria-label="Show dessert recipes only">
             <label for="course-dessert">Dessert</label>
         </div>
-        <button type="button" id="clear-button">Clear</button>
-        <button type="submit" id="submit-button">Search</button>
+        <button type="button" id="clear-button" aria-label="Clear search input">Clear</button>
+        <button type="submit" id="submit-button" aria-label="Run recipe search">Search</button>
     </form>
 
         {% if message %}
@@ -43,7 +43,7 @@
         {% for meal in meals %}
             <a href="{{ url_for('recipe_detail', id=meal.idMeal) }}" class="meal-card">
                 <p id="meal-name" class="meal-name">{{ meal.strMeal }}</p>
-                <img src="{{ meal.strMealThumb }}">
+                <img src="{{ meal.strMealThumb }}" alt="{{ meal.strMeal }} thumbnail">
             </a>
         {% endfor %}
         {% else %}

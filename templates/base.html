@@ -48,7 +48,7 @@
          <img src="{{ url_for('static', filename='images/icon.png') }}" alt="GlobalGrub Icon" class="icon">
          <a href="{{ url_for('home') }}">GlobalGrub</a>
         </div>
-        <nav class="navbar-links">
+        <nav class="navbar-links" aria-label="Primary navigation">
             <a href="{{ url_for('home') }}">Home</a>
             <a href="{{ url_for('countries') }}">Countries</a>
             <a href="{{ url_for('recipes') }}">Recipes</a>
@@ -62,14 +62,14 @@
                 <a href="{{ url_for('login') }}">Login</a>
             {% endif %}
         </nav>
-        <button class="hamburger" id="hamburger">
+        <button class="hamburger" id="hamburger" aria-label="Toggle mobile menu" aria-controls="mobileMenu" aria-expanded="false">
             <span></span>
             <span></span>
             <span></span>
         </button>
     </header>
 
-    <div class="mobile-menu" id="mobileMenu">
+    <div class="mobile-menu" id="mobileMenu" role="navigation" aria-label="Mobile navigation">
         <a href="{{ url_for('home') }}">Home</a>
         <a href="{{ url_for('countries') }}">Countries</a>
         <a href="{{ url_for('recipes') }}">Recipes</a>

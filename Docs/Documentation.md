@@ -83,6 +83,15 @@ Ingredients are built by looping through TheMealDB fields `strIngredient1..20` a
 
 ---
 
+## Accessibility
+
+- Added meaningful `alt` text for recipe and UI images
+- Added `aria-label` to key search, filter, and menu controls
+- Added `aria-expanded` and `aria-controls` to the mobile menu toggle
+- Added a `title` attribute to the embedded recipe video iframe
+
+---
+
 ## Tech Stack
 
 - Python 3
