@@ -32,11 +32,4 @@
         }
     });
 
-    // Prevent form submission if search input is empty
-    searchForm.addEventListener("submit", (e) => {
-        if (searchInput.value.trim() === "") {
-            e.preventDefault();
-        }
-    });
-
 })();

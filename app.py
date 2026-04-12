@@ -10,23 +10,38 @@ def home():
 
 @app.route("/recipes")
 def recipes():
-    search = request.args.get("search")
-    region = request.args.get("region")
-    
+    search = (request.args.get("search") or "").strip()
+    region = (request.args.get("region") or "").strip()
+      
     meals = []
+    message = None
     
-   # Show results based on search and region parameters or show all
-    if region:
-        url = f"https://www.themealdb.com/api/json/v1/1/filter.php?a={region}"    
-        meals = requests.get(url).json().get("meals") or []
+    
+   # Empty search term 
+    if "search" in request.args and search == "":
+        message = "Please enter a search term."
+        
+    # Search recipes
     elif search:
         url = f"https://www.themealdb.com/api/json/v1/1/search.php?s={search}"
         meals = requests.get(url).json().get("meals") or []
-    else:
-        meals = []
-            
-    # Pass meals and region to template
-    return render_template("recipes.html", meals=meals, region=region, search=search)
+        
+        # Handle no results found for search term
+        if not meals:
+            message = f"No results found for: {search}"
+    
+    # Filter by region 
+    elif region:
+        url = f"https://www.themealdb.com/api/json/v1/1/filter.php?a={region}"  
+        meals = requests.get(url).json().get("meals") or []
+        
+        # Handle no results found
+        if not meals:
+            message = "No results found."
+         
+
+    # Pass variables to template 
+    return render_template("recipes.html", meals=meals, region=region, search=search, message=message)
 
 @app.route("/recipe/<id>")
 def recipe_detail(id):

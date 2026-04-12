@@ -13,22 +13,30 @@
         <button type="submit" id="submit-button">Search</button>
     </form>
 
-    {% if region %}
-        <p class="active-filter">Region: {{ region }}</p>
-    {% endif %}
+        {% if message %}
+        <p class="empty-search">{{ message }}</p>
+        {% endif %}
 
-    {% if search %}
-        <p class="active-filter">Search: {{ search }}</p>
-    {% endif %}
+        {% if region %}
+            <p class="active-filter">Region: {{ region }}</p>
+        {% endif %}
 
-    <!-- Search results -->
-   <div class="search-results">
-    {% for meal in meals %}
-        <a href="{{ url_for('recipe_detail', id=meal.idMeal) }}" class="meal-card">
-            <p id="meal-name" class="meal-name">{{ meal.strMeal }}</p>
-            <img src="{{ meal.strMealThumb }}">
-        </a>
-    {% endfor %}
+        {% if search %}
+            <p class="active-filter">Search results for: {{ search }}</p>
+        {% endif %}
+
+        <!-- Search results -->
+        {% if meals %}
+        <p class="results-count">{{ meals|length }} recipe(s) found</p> 
+            <div class="search-results">
+        {% for meal in meals %}
+            <a href="{{ url_for('recipe_detail', id=meal.idMeal) }}" class="meal-card">
+                <p id="meal-name" class="meal-name">{{ meal.strMeal }}</p>
+                <img src="{{ meal.strMealThumb }}">
+            </a>
+        {% endfor %}
+        {% else %}
+    {% endif %}
     </div>
 </main>
 

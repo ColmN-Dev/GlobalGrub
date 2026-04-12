@@ -38,82 +38,90 @@
 
         
         <section>
-        <p class="region-label">Discover Recipes</p>
+        <p class="region-label">Discover Recipes by Region</p>
 
         
 
-            <!-- American/Mexican -->
-            <p class="region-group-label">American/Mexican</p>
+            <!-- Americas -->
+            <p class="region-group-label">North/South American Recipes</p>
             <div class="region-group">
+            <a href="{{ url_for('recipes', region='Canadian') }}" class="region-card">
+                <span class="region-name">Canadian</span>
+                <img src="{{ url_for('static', filename='images/canadian.png') }}" alt="Canadian Recipes">
+            </a>
+
             <a href="{{ url_for('recipes', region='American') }}" class="region-card">
                 <span class="region-name">American</span>
-                <img src="{{ url_for('static', filename='images/american.png') }}">
+                <img src="{{ url_for('static', filename='images/american.png') }}" alt="American Recipes">
             </a>
 
             <a href="{{ url_for('recipes', region='Mexican') }}" class="region-card">
                 <span class="region-name">Mexican</span>
-                <img src="{{ url_for('static', filename='images/mexican.png') }}">
+                <img src="{{ url_for('static', filename='images/mexican.png') }}" alt="Mexican Recipes">
+            </a>
+
+            <a href="{{ url_for('recipes', region='Argentinian') }}" class="region-card">
+                <span class="region-name">Argentinian</span>
+                <img src="{{ url_for('static', filename='images/argentinian.png') }}" alt="Argentinian Recipes">
             </a>
             </div>
 
             <!-- European -->
-            <p class="region-group-label">European</p>
+            <p class="region-group-label">European Recipes</p>
             <div class="region-group">
             <a href="{{ url_for('recipes', region='Italian') }}" class="region-card">
                 <span class="region-name">Italian</span>
-                <img src="{{ url_for('static', filename='images/italian.png') }}">
+                <img src="{{ url_for('static', filename='images/italian.png') }}" alt="Italian Recipes">
             </a>
 
             <a href="{{ url_for('recipes', region='Irish') }}" class="region-card">
                 <span class="region-name">Irish</span>
-                <img src="{{ url_for('static', filename='images/irish.png') }}">
+                <img src="{{ url_for('static', filename='images/irish.png') }}" alt="Irish Recipes">
             </a>
 
             <a href="{{ url_for('recipes', region='Polish') }}" class="region-card">
                 <span class="region-name">Polish</span>
-                <img src="{{ url_for('static', filename='images/polish.png') }}">
+                <img src="{{ url_for('static', filename='images/polish.png') }}" alt="Polish Recipes">
             </a>
 
             <a href="{{ url_for('recipes', region='Spanish') }}" class="region-card">
                 <span class="region-name">Spanish</span>
-                <img src="{{ url_for('static', filename='images/spanish.png') }}">
+                <img src="{{ url_for('static', filename='images/spanish.png') }}" alt="Spanish Recipes">
             </a>
             </div>
 
             <!-- Asian -->
-            <p class="region-group-label">Asian</p>
+            <p class="region-group-label">Asian Recipes</p>
             <div class="region-group">
             <a href="{{ url_for('recipes', region='Chinese') }}" class="region-card">
                 <span class="region-name">Chinese</span>
-                <img src="{{ url_for('static', filename='images/chinese.png') }}">
+                <img src="{{ url_for('static', filename='images/chinese.png') }}" alt="Chinese Recipes">
             </a>
 
             <a href="{{ url_for('recipes', region='Indian') }}" class="region-card">
                 <span class="region-name">Indian</span>
-                <img src="{{ url_for('static', filename='images/indian.png') }}">
+                <img src="{{ url_for('static', filename='images/indian.png') }}" alt="Indian Recipes">
             </a>
 
             <a href="{{ url_for('recipes', region='Japanese') }}" class="region-card">
                 <span class="region-name">Japanese</span>
-                <img src="{{ url_for('static', filename='images/japanese.png') }}">
+                <img src="{{ url_for('static', filename='images/japanese.png') }}" alt="Japanese Recipes">
             </a>
 
             <a href="{{ url_for('recipes', region='Thai') }}" class="region-card">
                 <span class="region-name">Thai</span>
-                <img src="{{ url_for('static', filename='images/thai.png') }}">
+                <img src="{{ url_for('static', filename='images/thai.png') }}" alt="Thai Recipes">
             </a>
             </div>
 
-           
-            <p class="region-group-label">All Recipes</p>
-            <div class="region-group">
-            <div class="all-container">
             <!-- All Recipes -->
+            <p class="region-group-label">All Recipes</p>
+            <div class="all-container">
+
             <a href="{{ url_for('recipes') }}" class="region-card all-card">
                 <span class="region-name">All Recipes</span>
                 <img src="{{ url_for('static', filename='images/all.png') }}" alt="All Recipes">
             </a>
-            </div>
             </div>
 
         </section>
