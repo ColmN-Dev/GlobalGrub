@@ -534,6 +534,10 @@ body.menu-open {
     backdrop-filter: blur(5px);
 }
 
+.meal-instructions h2 {
+    backdrop-filter: none;
+}
+
 .meal-ingredients {
     padding: 2em 1em;
     margin: 2em;
