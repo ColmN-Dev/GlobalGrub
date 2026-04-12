@@ -9,6 +9,13 @@
     <!-- Search form -->
     <form action="{{ url_for('recipes') }}" method="GET" id="searchForm">
         <input type="text" id="mealSearch" name="search" placeholder="Search for recipes..." autocomplete="off">
+        <div class="course-toggle" aria-label="Course filter">
+            <input type="radio" id="course-all" name="course" value="all" {% if course != 'dessert' %}checked{% endif %}>
+            <label for="course-all">All</label>
+
+            <input type="radio" id="course-dessert" name="course" value="dessert" {% if course == 'dessert' %}checked{% endif %}>
+            <label for="course-dessert">Dessert</label>
+        </div>
         <button type="button" id="clear-button">Clear</button>
         <button type="submit" id="submit-button">Search</button>
     </form>
@@ -23,6 +30,10 @@
 
         {% if search %}
             <p class="active-filter">Search results for: {{ search }}</p>
+        {% endif %}
+
+        {% if search and course == 'dessert' %}
+            <p class="active-filter">Course: Dessert</p>
         {% endif %}
 
         <!-- Search results -->

@@ -295,6 +295,12 @@ body.menu-open {
     margin: 2em auto;
 }
 
+.countries-link-container {
+    display: flex;
+    justify-content: center;
+    margin: 1.5em auto 0 auto;
+}
+
 .region-card::after {
     content: "";
     position: absolute;
@@ -341,6 +347,44 @@ body.menu-open {
 #mealSearch:hover {
     background-color: rgba(255, 255, 255, 0.2);
     outline: none;
+}
+
+.course-toggle {
+    max-width: 600px;
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    gap: 0.6em;
+    flex-wrap: wrap;
+}
+
+.course-toggle input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.course-toggle label {
+    color: #fff;
+    background-color: rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    border-radius: 12px;
+    padding: 0.45em 1.2em;
+    font-family: 'Cinzel', sans-serif;
+    font-style: italic;
+    font-size: 1.05em;
+    cursor: pointer;
+    transition: background-color 0.25s ease-in-out, transform 0.25s ease-in-out;
+}
+
+.course-toggle label:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-3px);
+}
+
+.course-toggle input[type="radio"]:checked + label {
+    background-color: rgba(255, 255, 255, 0.2);
 }
 
 #search-form {
@@ -606,6 +650,43 @@ p {
     margin: 2em auto;
 }
 
+/* Countries Page */
+
+.countries-subtitle {
+    max-width: 900px;
+    margin: 1em auto;
+}
+
+.country-grid {
+    max-width: 1100px;
+    margin: 2em auto;
+    padding: 0 1em;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1em;
+}
+
+.country-link {
+    display: block;
+    text-align: center;
+    text-decoration: none;
+    color: #fff;
+    font-family: 'Cinzel', sans-serif;
+    font-style: italic;
+    font-size: 1.1em;
+    padding: 0.9em 0.8em;
+    background-color: rgba(0, 0, 0, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 10px;
+    backdrop-filter: blur(5px);
+    transition: transform 0.25s ease-in-out, background-color 0.25s ease-in-out;
+}
+
+.country-link:hover {
+    transform: translateY(-6px);
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
 /* Footer */
 
 .footer {
@@ -638,6 +719,28 @@ p {
 /* Responsive Design */
 
 @media (max-width: 1024px) {
+    .navbar {
+        padding: 0.8rem 1.1rem;
+    }
+
+    .navbar-brand a {
+        font-size: 1.6em;
+    }
+
+    .icon {
+        width: 60px;
+        height: 60px;
+    }
+
+    .navbar-links {
+        gap: 1em;
+    }
+
+    .navbar-links a {
+        font-size: 0.88em;
+        padding: 0.25rem 0.4rem;
+    }
+
     .region-group {
         grid-template-columns: repeat(2, 1fr);
         

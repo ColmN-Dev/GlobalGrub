@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+<main>
+    <h1>Browse Recipes by Country</h1>
+    <p class="countries-subtitle">Pick any country from TheMealDB to explore recipes.</p>
+
+    <a href="{{ url_for('home') }}" class="back-button">↩ Back to Home</a>
+
+    {% if message %}
+        <p class="empty-search">{{ message }}</p>
+    {% else %}
+        <p class="results-count">{{ countries|length }} countries available</p>
+
+        <section class="country-grid" aria-label="All MealDB countries">
+            {% for country in countries %}
+                <a href="{{ url_for('recipes', region=country) }}" class="country-link">{{ country }}</a>
+            {% endfor %}
+        </section>
+    {% endif %}
+</main>
+{% endblock %}
