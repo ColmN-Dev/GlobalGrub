@@ -536,6 +536,11 @@ body.menu-open {
     border-radius: 8px;
 }
 
+.meal-instructions p {
+    background: none;
+    backdrop-filter: none;
+}
+
 .meal-ingredients {
     padding: 2em 1em;
     margin: 2em;
