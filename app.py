@@ -45,8 +45,8 @@ def recipes():
     message = None
 
     try:
-        # Show message if nothing was entered
-        if search == "" and not region:
+        # Show message only when user submits an empty search
+        if "search" in request.args and search == "" and not region:
             message = "Please enter a search term."
         
         elif search:
