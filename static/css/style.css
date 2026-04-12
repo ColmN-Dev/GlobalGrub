@@ -470,6 +470,9 @@ body.menu-open {
     text-align: center;
     font-family: 'Cinzel', sans-serif;
     font-style: italic;
+    height: 250px;
+    display: flex;
+    flex-direction: column;
 
 }
 
@@ -480,6 +483,7 @@ body.menu-open {
     display: block;
     border-radius: 0 0 12px 12px;
     transition: transform 0.3s ease-in-out, filter 0.5s ease-in-out;
+    flex-shrink: 0;
 }
 
 .meal-card:hover {
@@ -491,6 +495,10 @@ body.menu-open {
     padding: 0.8em;
     border-radius: 12px 12px 0 0;
     backdrop-filter: blur(5px);
+    display: flex;
+    flex-grow: 1;
+    align-item: center;
+    justify-content: center; 
 }
 
 .meal-image {
