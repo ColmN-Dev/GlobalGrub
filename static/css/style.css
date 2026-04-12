@@ -192,13 +192,6 @@ body.menu-open {
 
 /* Marquee */
 
-.marquee-label {
-    text-align: center;
-    font-size: 2em;
-    margin-top: 2em;
-    font-style: italic;
-}
-
 .marquee-container {
     width: 100%;
     overflow: hidden;
