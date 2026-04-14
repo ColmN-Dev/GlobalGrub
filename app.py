@@ -24,6 +24,10 @@ login_manager.init_app(app)
 # if user is not logged in, send them to login page
 login_manager.login_view = 'login'
 
+# tell flask-login how to load user from db
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
 
 # user table for authentication
 class User(UserMixin, db.Model):
@@ -67,7 +71,7 @@ def countries():
         )
 
         if not countries_list:
-            message = "no countries returned from API"
+            message = "No countries returned from API"
 
     except requests.exceptions.RequestException:
         message = "API request failed"
@@ -103,7 +107,7 @@ def recipes():
                 meals = [meal for meal in meals if (meal.get("strCategory") or "").lower() == "dessert"]
 
             if not meals:
-                message = f"no results for {search}"
+                message = f"No Results found for: {search}"
 
         elif region:
             # filter by region
@@ -116,7 +120,7 @@ def recipes():
                 meals = [meal for meal in meals if (meal.get("strCategory") or "").lower() == "dessert"]
 
             if not meals:
-                message = "No results found"
+                message = f"No Results found for: {region}"
 
     except requests.exceptions.RequestException:
         message = "API request failed"
@@ -174,25 +178,63 @@ def favourites():
 
 @app.route("/auth/signup", methods=["GET", "POST"])
 def signup():
+    if request.method == "POST":
+        username = request.form.get("username" or "").strip()
+        password = request.form.get("password" or "").strip() 
+
+        # Check for existing user
+        existing_user = User.query.filter_by(username=username).first()
+        if existing_user:
+            return "Username already exists", 400
+        
+        # Create new user and hash password
+        new_user = User(username=username)
+        new_user.set_password(password)
+        
+        # Save user to database
+        db.session.add(new_user)
+        db.session.commit()
+        
+        return redirect(url_for("login"))
+        
     return render_template("/auth/signup.html")
 
 
+# simple login route that checks username/password and logs user in
 @app.route("/auth/login", methods=["GET", "POST"])
 def login():
+    
+    if request.method == "POST":
+        username = (request.form.get("username") or "").strip()
+        password = (request.form.get("password") or "").strip()
+
+        user = User.query.filter_by(username=username).first()
+
+        # check if user exists and password is correct
+        if user and user.check_password(password):
+            login_user(user)
+            return redirect(url_for("profile"))
+        
+        return " Invalid username or password", 401
+    
     return render_template("/auth/login.html")
 
 
-@app.route("/auth/logout", methods=["GET", "POST"])
+@app.route("/auth/logout", methods=["POST"])
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for("home"))
+    return redirect(url_for("login"))
 
 
 @app.route("/auth/profile")
 @login_required
 def profile():
     return render_template("/auth/profile.html")
+
+# create db tables if they don't exist
+with app.app_context():
+    db.create_all()
 
 
 if __name__ == "__main__":

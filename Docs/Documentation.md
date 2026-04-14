@@ -1,113 +1,260 @@
 # GlobalGrub Documentation
 
-Last updated: April 12, 2026
+**Last updated:** April 2026
+
+---
 
 ## Overview
 
-GlobalGrub is a Flask web application for exploring recipes from around the world using TheMealDB API. Users can browse recipes by country, search by meal name, and open a full recipe detail page.
+GlobalGrub is a Flask web application I built for browsing recipes from around the world using TheMealDB API.
+
+The project started as a frontend-focused idea and gradually evolved into a full-stack application with server-side rendering, search and filtering, user authentication, and a favourites system (still in progress).
 
 ---
 
-## Current Architecture
+## Project Development
 
-The app uses a server-side Flask flow:
+### 1. Initial frontend version
 
-- Flask handles routing and data fetching
-- TheMealDB provides recipe data
-- Jinja templates render pages from route data
-- JavaScript is used for small UI interactions only
+The first version of the project was focused on frontend design:
+- HTML, CSS, and JavaScript
+- Responsive layout for recipe cards and pages
+- Basic UI structure for browsing recipes
 
----
-
-## Current Routes
-
-- `/` -> Home page with hero, marquee, and region cards
-- `/countries` -> Lists all MealDB countries (A-Z)
-- `/recipes` -> Search and region results page
-- `/recipe/<id>` -> Single recipe details page
-- `/about`, `/favourites`, `/auth/signup`, `/auth/login`, `/auth/profile` -> Template pages
+At this stage, the focus was mainly on design and layout rather than backend logic.
 
 ---
 
-## Recipes Route Behavior
+### 2. API handled with JavaScript (fetch + async)
 
-The `/recipes` route supports three input values from query parameters:
+Originally, I used JavaScript to handle API requests:
+- `fetch()` calls to TheMealDB
+- async/await for handling responses
+- rendering recipe data directly in the browser
 
-- `search` -> meal name search
-- `region` -> country/area filter
-- `course` -> `all` or `dessert`
-
-Current behavior:
-
-- If `search` exists, data comes from `search.php?s=...`
-- If `course=dessert` with search, results are narrowed to dessert category
-- If `region` exists, data comes from `filter.php?a=...`
-- If both search and region are empty, a user message is shown
+This worked but became harder to manage as the project grew because:
+- frontend logic became messy
+- API responses were inconsistent
+- state handling across pages was limited
 
 ---
 
-## Countries Page
+### 3. Moving to Flask backend (server-side rendering)
 
-The `/countries` route calls `list.php?a=list`, extracts `strArea`, removes empty values, and sorts the list alphabetically before rendering.
+I moved API handling into Flask.
 
-Each country link points to:
+This improved the project by:
+- centralising logic in the backend
+- simplifying frontend code
+- making routing and data handling more consistent
+- using Jinja templates for dynamic pages
 
-- `/recipes?region=<country>`
-
-This gives users a quick way to browse meals by region from one page.
-
----
-
-## Recipe Detail Page
-
-The `/recipe/<id>` route calls `lookup.php?i=<id>` and renders one meal.
-
-It includes:
-
-- meal title and metadata
-- image
-- instructions
-- ingredient list
-
-Ingredients are built by looping through TheMealDB fields `strIngredient1..20` and `strMeasure1..20`.
+At this point, the project became a full Flask web application instead of a frontend API viewer.
 
 ---
 
-## Frontend and Styling Notes
+### 4. Search, filtering and multi-page structure
 
-- Shared layout is handled in `base.html`
-- Main pages extend the base template
-- UI is custom CSS with responsive breakpoints
-- Navbar supports desktop links and a mobile slide-out menu
-- Recipes page uses simple `All` / `Dessert` filter buttons
+I added:
+- search by meal name
+- filter by region/country
+- filter by course type (all or desserts)
 
----
+This required restructuring the `/recipes` route to use query parameters.
 
-## Accessibility
-
-- Added meaningful `alt` text for recipe and UI images
-- Added `aria-label` to key search, filter, and menu controls
-- Added `aria-expanded` and `aria-controls` to the mobile menu toggle
-- Added a `title` attribute to the embedded recipe video iframe
+I also added:
+- `/countries` page for browsing regions
+- `/recipe/<id>` page for full recipe details
+- ingredient parsing using API fields 1–20
 
 ---
 
-## Tech Stack
+### 5. Responsive design challenges
 
-- Python 3
-- Flask
-- Requests
-- Jinja templates
-- HTML/CSS/JavaScript
-- Gunicorn (deployment)
-- Render (hosting)
+A large part of early development was UI work.
+
+Problems included:
+- recipe cards breaking on smaller screens
+- navigation not scaling properly on mobile
+- inconsistent spacing and layout across pages
+
+These were fixed through repeated CSS adjustments.
 
 ---
 
-## Known Gaps / Next Steps
+### 6. Authentication system
 
-These are planned but not fully implemented in the current app state:
+Later in development, I added user authentication:
 
-- complete auth/session flow (including logout handling)
-- persistent favourites storage
-- persistent user profile data
+- user registration (signup)
+- login and logout
+- password hashing with Flask-Bcrypt
+- session handling using Flask-Login
+- SQLite database using SQLAlchemy
+
+This changed the app from a public API viewer into a user-based system.
+
+---
+
+## Design Decisions
+
+### Theme and visual direction
+
+At the start, I planned a **warm forest-inspired theme with a day/night toggle**.
+
+During development, I changed direction because:
+- theme switching added unnecessary complexity
+- it was harder to keep styling consistent
+- it did not improve usability enough
+
+I moved instead to a simpler design:
+
+- warm restaurant / outdoor dining atmosphere
+- inspired by evening dining and sunset lighting
+- focus on food presentation rather than heavy theming
+
+---
+
+### Final UI style
+
+The final design uses:
+- dark glass-style UI (navbar, footer, cards, buttons)
+- warm sunset-inspired background tones
+- soft contrast between background and content
+
+This keeps the site visually warm while staying readable and consistent.
+
+---
+
+### UI interactions
+
+To improve usability and feel, I added:
+- light grey hover effects on interactive elements
+- `translateY()` lift effect on cards and buttons
+- smooth CSS transitions for hover states
+
+---
+
+### Backend design choices
+
+- Flask used for server-side rendering to keep the project simple
+- Flask-Login used instead of custom authentication for security
+- SQLite used because it is lightweight and easy to manage
+- Jinja templates used instead of a frontend framework
+
+---
+
+### Routing approach
+
+Instead of multiple pages for filtering, I used query parameters:
+- `search`
+- `region`
+- `course`
+
+This kept routing simpler and easier to maintain.
+
+---
+
+## Problems and Challenges
+
+### 1. Switching from frontend API calls to Flask
+
+The original version used JavaScript fetch calls, which caused:
+- messy frontend logic
+- inconsistent rendering
+- difficulty managing API responses
+
+Moving to Flask fixed this by centralising logic.
+
+---
+
+### 2. Responsive design issues
+
+The UI required several iterations to fix:
+- broken mobile layouts
+- navigation scaling issues
+- inconsistent spacing
+
+---
+
+### 3. Database setup issue
+
+At one point I got:
+
+> no such table: user
+
+This happened because the database was not initialised.
+
+Fix:
+```python
+with app.app_context():
+    db.create_all()
+```
+---
+
+### 4. Understanding authentication flow
+
+It was initially unclear how Flask-Login works:
+
+- how `current_user` works  
+- why `user_loader` is required  
+- how sessions persist between pages  
+
+I learned that only the user ID is stored in the session. The full user object is then loaded again on each request using the `user_loader` function.
+
+---
+
+### 5. API inconsistency issues
+
+TheMealDB API sometimes returns:
+
+- empty results  
+- missing fields  
+- inconsistent structures  
+
+These were handled using fallback checks and safe handling in Python so the app does not break when data is missing.
+
+---
+
+### 6. Code structure during development
+
+Early versions mixed:
+
+- API logic  
+- authentication logic  
+- route handling  
+
+As the project grew, I separated the code into clearer sections so each part of the application has a defined responsibility.
+
+---
+
+## Current limitations
+
+- Favourites system is not fully implemented  
+- No flash messaging for login/signup feedback  
+- Profile page is still basic and will be improved later  
+
+---
+
+## What I learned
+
+- How Flask applications are structured  
+- Difference between frontend and backend responsibilities  
+- How authentication systems work in practice  
+- How sessions work with Flask-Login  
+- How to debug database and API issues  
+- How design and structure improve through iteration  
+
+---
+
+## Credits
+
+Authentication system structure was inspired by:
+
+https://github.com/neupanic/Python-Flask-Authentication-Tutorial
+
+Used for:
+- Flask-Login setup  
+- `user_loader` implementation  
+- authentication flow  
+- password hashing approach  
