@@ -1,50 +1,50 @@
 from flask import Flask, render_template, request, redirect, url_for
-from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
+from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 import requests
 
-# basic flask setup
+# initialize Flask app
 app = Flask(__name__)
 
-# needed for sessions (login cookies etc)
+# config for sessions/cookies and database
 app.secret_key = 'globalgrub-dev-key'
-
-# sqlite db for storing users
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///globalgrub.db'
-db = SQLAlchemy(app)
 
-# used for hashing passwords so they aren't stored in plain text
+# initialize database and password hashing
+db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 
-# flask-login setup (handles login sessions)
+# setup login system
 login_manager = LoginManager()
 login_manager.init_app(app)
 
-# if user is not logged in, send them to login page
+# send user here if they try access something without being logged in
 login_manager.login_view = 'login'
 
-# tell flask-login how to load user from db
+
+# this is used by flask-login to reload the user from session
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-# user table for authentication
+
+# user table
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
 
-    # usernames must be unique
+    # usernames need to be unique
     username = db.Column(db.String(80), unique=True, nullable=False)
 
-    # stored hashed password (never store raw password)
+    # store hashed password, never the actual one
     password_hash = db.Column(db.String(128), nullable=False)
 
-    # hash password before saving user
     def set_password(self, password):
+        # hash the password before saving
         self.password_hash = bcrypt.generate_password_hash(password).decode('utf-8')
 
-    # check if entered password matches stored hash
     def check_password(self, password):
+        # compare input password with stored hash
         return bcrypt.check_password_hash(self.password_hash, password)
 
 
@@ -59,12 +59,12 @@ def countries():
     message = None
 
     try:
-        # call external API for regions
         url = "https://www.themealdb.com/api/json/v1/1/list.php?a=list"
+
         response = requests.get(url, timeout=10)
         data = response.json()
 
-        # clean up list and sort alphabetically
+        # pull country names out of API response and sort them
         countries_list = sorted(
             [item.get("strArea", "") for item in (data.get("meals") or []) if item.get("strArea")],
             key=str.lower
@@ -76,13 +76,14 @@ def countries():
     except requests.exceptions.RequestException:
         message = "API request failed"
     except Exception:
-        message = "An error occurred while processing your request"
+        message = "An error occurred"
 
     return render_template("countries.html", countries=countries_list, message=message)
 
 
 @app.route("/recipes")
 def recipes():
+    # grab values from URL, default to empty so nothing breaks
     search = (request.args.get("search") or "").strip()
     region = (request.args.get("region") or "").strip()
     course = (request.args.get("course") or "all").strip().lower()
@@ -91,33 +92,38 @@ def recipes():
     message = None
 
     try:
-        # if user submits empty search
+        # user clicked search but didn’t type anything
         if "search" in request.args and search == "" and not region:
             message = "Please enter something to search"
 
+        # search by meal name
         elif search:
-            # search by meal name
             url = f"https://www.themealdb.com/api/json/v1/1/search.php?s={search}"
+
             response = requests.get(url, timeout=10)
             data = response.json()
+
+            # API sometimes returns None, so force it into a list
             meals = data.get("meals") or []
 
-            # optional filter for desserts only
+            # if dessert filter is selected, narrow results down
             if course == "dessert":
-                meals = [meal for meal in meals if (meal.get("strCategory") or "").lower() == "dessert"]
+                meals = [
+                    m for m in meals
+                    if (m.get("strCategory") or "").lower() == "dessert"
+                ]
 
             if not meals:
                 message = f"No Results found for: {search}"
 
+        # filter by region instead
         elif region:
-            # filter by region
             url = f"https://www.themealdb.com/api/json/v1/1/filter.php?a={region}"
+
             response = requests.get(url, timeout=10)
             data = response.json()
-            meals = data.get("meals") or []
 
-            if course == "dessert":
-                meals = [meal for meal in meals if (meal.get("strCategory") or "").lower() == "dessert"]
+            meals = data.get("meals") or []
 
             if not meals:
                 message = f"No Results found for: {region}"
@@ -125,7 +131,7 @@ def recipes():
     except requests.exceptions.RequestException:
         message = "API request failed"
     except Exception:
-        message = "An error occurred while processing your request"
+        message = "An error occurred"
 
     return render_template(
         "recipes.html",
@@ -140,8 +146,9 @@ def recipes():
 @app.route("/recipe/<id>")
 def recipe_detail(id):
     try:
-        # get full recipe info
+        # get full recipe using meal id
         url = f"https://www.themealdb.com/api/json/v1/1/lookup.php?i={id}"
+
         response = requests.get(url, timeout=10)
         data = response.json()
 
@@ -150,12 +157,14 @@ def recipe_detail(id):
 
         meal = data["meals"][0]
 
-        # build ingredient list
         ingredients = []
+
+        # API splits ingredients across 20 fields so rebuild them into a list
         for i in range(1, 21):
             ingredient = meal.get(f"strIngredient{i}")
             measure = meal.get(f"strMeasure{i}")
 
+            # only add if ingredient actually exists
             if ingredient and ingredient.strip():
                 ingredients.append(f"{measure} {ingredient}")
 
@@ -170,69 +179,95 @@ def about():
     return render_template("about.html")
 
 
+# must be logged in to view favourites
 @app.route("/favourites")
 @login_required
 def favourites():
     return render_template("favourites.html")
 
 
+# create account route (handles signup form + user creation)
 @app.route("/auth/signup", methods=["GET", "POST"])
 def signup():
+
     if request.method == "POST":
-        username = request.form.get("username" or "").strip()
-        password = request.form.get("password" or "").strip() 
 
-        # Check for existing user
-        existing_user = User.query.filter_by(username=username).first()
-        if existing_user:
-            return "Username already exists", 400
-        
-        # Create new user and hash password
-        new_user = User(username=username)
-        new_user.set_password(password)
-        
-        # Save user to database
-        db.session.add(new_user)
-        db.session.commit()
-        
-        return redirect(url_for("login"))
-        
-    return render_template("/auth/signup.html")
-
-
-# simple login route that checks username/password and logs user in
-@app.route("/auth/login", methods=["GET", "POST"])
-def login():
-    
-    if request.method == "POST":
+        # get form input and clean it
         username = (request.form.get("username") or "").strip()
         password = (request.form.get("password") or "").strip()
 
+        # basic validation so empty values do not get sent to database
+        if not username or not password:
+            return "Username and password are required", 400
+
+        # check if user already exists in database
+        existing_user = User.query.filter_by(username=username).first()
+        if existing_user:
+            return "Username already exists", 400
+
+        # create user object and hash password before saving
+        new_user = User(username=username)
+        new_user.set_password(password)
+
+        # save user to database
+        db.session.add(new_user)
+        db.session.commit()
+
+        # send user to login after successful signup
+        return redirect(url_for("login"))
+
+    # show signup page (GET request)
+    return render_template("auth/signup.html")
+
+
+# login route (handles authentication + session creation)
+@app.route("/auth/login", methods=["GET", "POST"])
+def login():
+
+    if request.method == "POST":
+
+        # get login input and clean it
+        username = (request.form.get("username") or "").strip()
+        password = (request.form.get("password") or "").strip()
+        
+        if not username or not password:
+            return "Username and password are required", 400
+
+        # look up user in database
         user = User.query.filter_by(username=username).first()
 
-        # check if user exists and password is correct
+        # verify user exists and password matches hash
         if user and user.check_password(password):
+            # log user in and create session cookie
             login_user(user)
+
+            # send to profile after successful login
             return redirect(url_for("profile"))
-        
-        return " Invalid username or password", 401
-    
-    return render_template("/auth/login.html")
+
+        # wrong credentials
+        return "Invalid username or password", 401
+
+    # show login page (GET request)
+    return render_template("auth/login.html")
 
 
+# log user out
 @app.route("/auth/logout", methods=["POST"])
 @login_required
 def logout():
+    # clear session
     logout_user()
     return redirect(url_for("login"))
 
 
+# profile page
 @app.route("/auth/profile")
 @login_required
 def profile():
-    return render_template("/auth/profile.html")
+    return render_template("auth/profile.html")
 
-# create db tables if they don't exist
+
+# create database tables if not already created (globalgrub.db file in instance folder)
 with app.app_context():
     db.create_all()
 

@@ -258,3 +258,9 @@ Used for:
 - `user_loader` implementation  
 - authentication flow  
 - password hashing approach  
+
+Adapted in this project by me:
+- integrated into my own route structure and template layout  
+- changed navigation/profile flow to match GlobalGrub pages  
+- added my own validation handling for signup/login inputs  
+- connected authentication to my existing recipe app architecture  
