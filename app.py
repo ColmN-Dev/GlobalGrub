@@ -2,13 +2,19 @@ from flask import Flask, render_template, request, redirect, url_for
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
+from dotenv import load_dotenv
 import requests
+import os
+
+# load variables from .env into the environment (for local development)
+load_dotenv()
 
 # initialize Flask app
 app = Flask(__name__)
 
 # config for sessions/cookies and database
-app.secret_key = 'globalgrub-dev-key'
+# require SECRET_KEY from environment/.env
+app.secret_key = os.environ["SECRET_KEY"]
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///globalgrub.db'
 
 # initialize database and password hashing
