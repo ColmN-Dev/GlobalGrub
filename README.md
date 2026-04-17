@@ -1,6 +1,6 @@
 # GlobalGrub
 
-Last updated: April 15, 2026
+Last updated: April 17, 2026
 
 ## Repository and Live App
 
@@ -9,7 +9,7 @@ Last updated: April 15, 2026
 
 ## Overview
 
-GlobalGrub is a Flask web application for browsing international recipes using TheMealDB API. The app includes server-side rendering with Jinja templates, recipe search/filter features, and user authentication with Flask-Login.
+GlobalGrub is a Flask web application for browsing international recipes using TheMealDB API. The app includes server-side rendering with Jinja templates, recipe search/filter features, user authentication with Flask-Login, and a favourites system.
 
 ## Key Features
 
@@ -19,6 +19,8 @@ GlobalGrub is a Flask web application for browsing international recipes using T
 - Recipe name search with optional dessert filter
 - Recipe detail page with ingredient parsing
 - User signup, login, logout, and profile page
+- Add/remove favourite recipes for logged-in users
+- Favourites page showing saved recipes
 - Password hashing with Flask-Bcrypt
 - SQLite user persistence via Flask-SQLAlchemy
 - Responsive layout (desktop navbar and mobile menu)
@@ -30,6 +32,7 @@ GlobalGrub is a Flask web application for browsing international recipes using T
 - Auth: Flask-Login, Flask-Bcrypt
 - Frontend: HTML, Jinja, CSS, JavaScript
 - API: TheMealDB
+- Environment config: python-dotenv (`.env`)
 - Hosting: Render (Gunicorn)
 
 ## Project Structure
@@ -62,13 +65,19 @@ python -m venv venv
 pip install -r requirements.txt
 ```
 
-4. Run the app:
+4. Create a `.env` file in project root:
+
+```env
+SECRET_KEY=your_long_random_secret_here
+```
+
+5. Run the app:
 
 ```powershell
 python app.py
 ```
 
-5. Open in browser:
+6. Open in browser:
 
 `http://127.0.0.1:5000`
 
@@ -86,8 +95,8 @@ Current deployment uses Render Web Service with:
 
 ## Current Limitations
 
-- Favourites page is still in progress
-- Profile page works but is still basic
+- Profile page is functional but still basic
+- Favourites are fetched from API one by one and can be optimized later
 
 ## Attribution
 
