@@ -6,13 +6,13 @@ from dotenv import load_dotenv
 import requests
 import os
 
-# load variables from .env into the environment (for local development)
+# load local environment variables from .env
 load_dotenv()
 
 # initialize Flask app
 app = Flask(__name__)
 
-# config for sessions/cookies and database
+# app configuration
 # require SECRET_KEY from environment/.env
 app.secret_key = os.environ["SECRET_KEY"]
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///globalgrub.db'
@@ -25,11 +25,11 @@ bcrypt = Bcrypt(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 
-# send user here if they try access something without being logged in
+# redirect unauthenticated users to login
 login_manager.login_view = 'login'
 
 
-# this is used by flask-login to reload the user from session
+# reload user from session for Flask-Login
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
@@ -42,7 +42,7 @@ class User(UserMixin, db.Model):
     # usernames need to be unique
     username = db.Column(db.String(80), unique=True, nullable=False)
 
-    # store hashed password, never the actual one for security purposes
+    # store hashed password only
     password_hash = db.Column(db.String(128), nullable=False)
 
     def set_password(self, password):
@@ -53,11 +53,11 @@ class User(UserMixin, db.Model):
         # compare input password with stored hash
         return bcrypt.check_password_hash(self.password_hash, password)
     
-# table to store user favourites
+# table for user favourite recipes
 class Favourite(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     
-    # store user id and recipe id for each favourite, recipe id is string from API
+    # recipe_id is TheMealDB id
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     
     recipe_id = db.Column(db.String(20), nullable=False)
@@ -98,7 +98,7 @@ def countries():
 
 @app.route("/recipes")
 def recipes():
-    # grab values from URL, default to empty so nothing breaks
+    # pull query params with safe defaults
     search = (request.args.get("search") or "").strip()
     region = (request.args.get("region") or "").strip()
     course = (request.args.get("course") or "all").strip().lower()
@@ -107,7 +107,7 @@ def recipes():
     message = None
 
     try:
-        # user clicked search but didn’t type anything
+        # search submitted with empty input
         if "search" in request.args and search == "" and not region:
             message = "Please enter something to search"
 
@@ -118,10 +118,10 @@ def recipes():
             response = requests.get(url, timeout=10)
             data = response.json()
 
-            # API sometimes returns None, so force it into a list
+            # API can return None for meals
             meals = data.get("meals") or []
 
-            # if dessert filter is selected, narrow results down
+            # optional dessert-only filter
             if course == "dessert":
                 meals = [
                     m for m in meals
@@ -131,7 +131,7 @@ def recipes():
             if not meals:
                 message = f"No Results found for: {search}"
 
-        # filter by region instead
+        # otherwise filter by region
         elif region:
             url = f"https://www.themealdb.com/api/json/v1/1/filter.php?a={region}"
 
@@ -155,7 +155,7 @@ def recipes():
 @app.route("/recipe/<id>")
 def recipe_detail(id):
     try:
-        # get full recipe details using meal id
+        # fetch full recipe details by meal id
         url = f"https://www.themealdb.com/api/json/v1/1/lookup.php?i={id}"
 
         response = requests.get(url, timeout=10)
@@ -168,7 +168,7 @@ def recipe_detail(id):
 
         ingredients = []
 
-        # API splits ingredients across 20 fields so rebuild them into a list
+        # API splits ingredients into indexed fields, so rebuild as a list
         for i in range(1, 21):
             ingredient = meal.get(f"strIngredient{i}")
             measure = meal.get(f"strMeasure{i}")
@@ -179,7 +179,7 @@ def recipe_detail(id):
                 
         saved = False
 
-        # if user is logged in, check if recipe is in their favourites to show correct button state for that recipe
+        # set favourite button state for logged-in users
         if current_user.is_authenticated:
             saved = Favourite.query.filter_by(user_id=current_user.id, recipe_id=id).first() is not None
 
@@ -198,7 +198,7 @@ def about():
 @login_required
 def add_favourite(recipe_id):
 
-    # check if this recipe is already in user's favourites to avoid duplicates using .first() to return one result
+    # avoid duplicate favourites
     existing = Favourite.query.filter_by(user_id=current_user.id, recipe_id=recipe_id).first()
 
     if not existing:
@@ -213,7 +213,7 @@ def add_favourite(recipe_id):
 @login_required
 def favourites():
     
-    # search for all favourites that match the current user's id, .all() to return list of results
+    # get all favourites for current user
     favs = Favourite.query.filter_by(user_id=current_user.id).all()
     
     meals = []
@@ -233,16 +233,15 @@ def favourites():
 @app.route("/remove_favourite/<recipe_id>", methods=["POST"])
 @login_required
 def remove_favourite(recipe_id):
+    # find matching favourite for this user and recipe
+    fav = Favourite.query.filter_by(user_id=current_user.id, recipe_id=recipe_id).first()
 
-        # find the favourite entry for this user and recipe, .first() since there should only be one
-        fav = Favourite.query.filter_by(user_id=current_user.id, recipe_id=recipe_id).first()
-        
-        # if it exists, delete it from the database
-        if fav:
-            db.session.delete(fav)
-            db.session.commit()
+    # delete only if it exists
+    if fav:
+        db.session.delete(fav)
+        db.session.commit()
 
-        return redirect(request.referrer or url_for("favourites"))
+    return redirect(request.referrer or url_for("favourites"))
 
 
 # create account route (handles signup form + user creation)

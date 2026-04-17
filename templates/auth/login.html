@@ -14,5 +14,8 @@
         </div>
         <button type="submit" class="user-button">Login</button>
     </form>
-    <a href="{{ url_for('signup') }}" class="form-switch">Don't have an account? Sign up here.</a>
+    <a href="{{ url_for('signup') }}" class="form-switch">
+        <span class="switch-question">Don't have an account?</span>
+        <span class="switch-action">Sign up here.</span>
+    </a>
 {% endblock %}

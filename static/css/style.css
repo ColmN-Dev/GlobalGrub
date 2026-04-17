@@ -847,6 +847,11 @@ p {
     text-decoration: underline;
 }
 
+.form-switch .switch-action {
+        display: block;
+        margin-top: 0.15em;
+    }
+
 /* ============================
    FOOTER
    ============================ */
@@ -1125,6 +1130,20 @@ p {
         padding: 0.5em 0.9em;
         margin: 1em auto;
         width: fit-content;
+    }
+
+    .form-switch {
+        display: block;
+        width: fit-content;
+        max-width: fit-content;
+        margin: 0 auto 1.2em auto;
+        padding: 0.4em 0.75em;
+        font-size: 1em;
+    }
+
+    .form-switch .switch-action {
+        display: block;
+        margin-top: 0.15em;
     }
 
     .meal-image {
