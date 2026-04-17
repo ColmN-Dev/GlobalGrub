@@ -47,13 +47,13 @@ GlobalGrub is a Flask web application for browsing international recipes using T
 1. Create virtual environment:
 
 ```powershell
-python -m venv .venv
+python -m venv venv
 ```
 
 2. Activate virtual environment (Windows PowerShell):
 
 ```powershell
-.\.venv\Scripts\Activate.ps1
+.\venv\Scripts\Activate.ps1
 ```
 
 3. Install dependencies:
