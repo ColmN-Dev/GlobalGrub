@@ -7,6 +7,29 @@
 
 <a class="back-button" href="{{ url_for('recipes') }}">↩ Back to Recipes</a>
 
+{% if current_user.is_authenticated %}
+
+<form method="POST"
+      action="{%if saved %}
+                {{ url_for('remove_favourite', recipe_id=meal.idMeal) }}
+            {% else %}
+                {{ url_for('add_favourite', recipe_id=meal.idMeal) }}
+            {% endif %}">
+
+    <button type="submit" class="fav-btn">
+
+        {% if saved %}
+            ★
+        {% else %}
+            ☆
+        {% endif %}
+
+    </button>
+
+</form>
+
+{% endif %}
+
 
 <img src="{{ meal.strMealThumb }}" alt="{{ meal.strMeal }}" class="meal-image">
 

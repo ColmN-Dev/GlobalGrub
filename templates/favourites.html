@@ -1,7 +1,38 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <main>
-        <h1>View Your Favourite Recipes</h1>
-    </main>
+<main>
+    <h1>View Your Favourite Recipes</h1>
+
+    {% if meals %}
+
+        <div class="search-results">
+
+            {% for meal in meals %}
+
+                <div class="meal-card-favourite">
+
+                    <a href="{{ url_for('recipe_detail', id=meal.idMeal) }}">
+                        <p class="meal-name">{{ meal.strMeal }}</p>
+                        <img src="{{ meal.strMealThumb }}" alt="{{ meal.strMeal }}">
+                    </a>
+
+                    <form method="POST"
+                          action="{{ url_for('remove_favourite', recipe_id=meal.idMeal) }}">
+                        
+                        <button type="submit" class="fav-btn">❌</button>
+
+                    </form>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+        <p class="empty-search">No favourites yet.</p>
+    {% endif %}
+
+</main>
 {% endblock %}

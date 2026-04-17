@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for
-from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required
+from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from dotenv import load_dotenv
@@ -42,7 +42,7 @@ class User(UserMixin, db.Model):
     # usernames need to be unique
     username = db.Column(db.String(80), unique=True, nullable=False)
 
-    # store hashed password, never the actual one
+    # store hashed password, never the actual one for security purposes
     password_hash = db.Column(db.String(128), nullable=False)
 
     def set_password(self, password):
@@ -52,6 +52,15 @@ class User(UserMixin, db.Model):
     def check_password(self, password):
         # compare input password with stored hash
         return bcrypt.check_password_hash(self.password_hash, password)
+    
+# table to store user favourites
+class Favourite(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    
+    # store user id and recipe id for each favourite, recipe id is string from API
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    
+    recipe_id = db.Column(db.String(20), nullable=False)
 
 
 @app.route("/")
@@ -140,19 +149,13 @@ def recipes():
         message = "An error occurred"
 
     return render_template(
-        "recipes.html",
-        meals=meals,
-        region=region,
-        search=search,
-        course=course,
-        message=message
-    )
+        "recipes.html", meals=meals, region=region, search=search, course=course, message=message)
 
 
 @app.route("/recipe/<id>")
 def recipe_detail(id):
     try:
-        # get full recipe using meal id
+        # get full recipe details using meal id
         url = f"https://www.themealdb.com/api/json/v1/1/lookup.php?i={id}"
 
         response = requests.get(url, timeout=10)
@@ -173,8 +176,14 @@ def recipe_detail(id):
             # only add if ingredient actually exists
             if ingredient and ingredient.strip():
                 ingredients.append(f"{measure} {ingredient}")
+                
+        saved = False
 
-        return render_template("recipe.html", meal=meal, ingredients=ingredients)
+        # if user is logged in, check if recipe is in their favourites to show correct button state for that recipe
+        if current_user.is_authenticated:
+            saved = Favourite.query.filter_by(user_id=current_user.id, recipe_id=id).first() is not None
+
+        return render_template("recipe.html", meal=meal, ingredients=ingredients, saved=saved)
 
     except Exception:
         return "Error loading recipe", 500
@@ -185,11 +194,55 @@ def about():
     return render_template("about.html")
 
 
-# must be logged in to view favourites
+@app.route("/add_favourite/<recipe_id>", methods=["POST"])
+@login_required
+def add_favourite(recipe_id):
+
+    # check if this recipe is already in user's favourites to avoid duplicates using .first() to return one result
+    existing = Favourite.query.filter_by(user_id=current_user.id, recipe_id=recipe_id).first()
+
+    if not existing:
+        fav = Favourite(user_id=current_user.id, recipe_id=recipe_id)
+        db.session.add(fav)
+        db.session.commit()
+
+    return redirect(request.referrer or url_for("recipes"))
+
+
 @app.route("/favourites")
 @login_required
 def favourites():
-    return render_template("favourites.html")
+    
+    # search for all favourites that match the current user's id, .all() to return list of results
+    favs = Favourite.query.filter_by(user_id=current_user.id).all()
+    
+    meals = []
+    
+    for fav in favs:
+        url = f"https://www.themealdb.com/api/json/v1/1/lookup.php?i={fav.recipe_id}"
+        response = requests.get(url, timeout=10)
+        data = response.json()
+
+        if data.get("meals"):
+            meals.append(data["meals"][0])
+        
+    
+    return render_template("favourites.html", meals=meals)
+
+
+@app.route("/remove_favourite/<recipe_id>", methods=["POST"])
+@login_required
+def remove_favourite(recipe_id):
+
+        # find the favourite entry for this user and recipe, .first() since there should only be one
+        fav = Favourite.query.filter_by(user_id=current_user.id, recipe_id=recipe_id).first()
+        
+        # if it exists, delete it from the database
+        if fav:
+            db.session.delete(fav)
+            db.session.commit()
+
+        return redirect(request.referrer or url_for("favourites"))
 
 
 # create account route (handles signup form + user creation)
@@ -270,7 +323,13 @@ def logout():
 @app.route("/auth/profile")
 @login_required
 def profile():
-    return render_template("auth/profile.html")
+    
+    favs = Favourite.query.filter_by(user_id=current_user.id).all()
+    
+    total = len(favs)
+    top3 = favs[:3]
+    
+    return render_template("auth/profile.html", total=total, top3=top3)
 
 
 # create database tables if not already created (globalgrub.db file in instance folder)
