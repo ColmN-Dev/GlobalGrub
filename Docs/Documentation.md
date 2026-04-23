@@ -280,6 +280,14 @@ Fix: I reorganized `app.py` into clearer sections by responsibility so the code 
 
 ---
 
+### 10. Render cold start delays
+
+Issue: The deployed app could be slow to respond after periods of inactivity due to Render spin-down.
+Cause: On the free tier, inactive services may sleep and need extra startup time on the next request.
+Fix: I configured cron-job.org to send a ping to GlobalGrub every 10 minutes to keep the service warm and reduce cold-start delays.
+
+---
+
 ## Current limitations
 
 The favourites system works, but the UI could still be improved further. Flash messages are not implemented yet. Recipe names from the API also vary in length, which can still affect layout consistency on the recipe and favourites pages.
