@@ -488,7 +488,7 @@ body.menu-open {
     backdrop-filter: blur(5px);
 }
 
-.back-button {
+.page-action-button {
     display: block;
     font-size: 1.2em;
     text-align: center;
@@ -504,12 +504,13 @@ body.menu-open {
     margin: 2em auto;
 }
 
-.back-button:hover {
+.page-action-button:hover {
     transform: translateY(-10px);
     background-color: rgba(255, 255, 255, 0.2);
 }
 
 .meal-card {
+    display: block;
     overflow: hidden;
     transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
     text-decoration: none;
@@ -544,31 +545,21 @@ body.menu-open {
     transform: translateY(-10px);
 }
 
-.meal-card-favourite {
-    overflow: hidden;
-    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-    text-decoration: none;
-    color: #fff;
-    font-size: 1.2em;
-    font-weight: bold;
-    padding: 0;
-    text-align: center;
-    font-family: 'Cinzel', sans-serif;
-    font-style: italic;
+.favourite-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
 }
 
-.meal-card-favourite a {
-    text-decoration: none;
-    color: #fff;
-    font-size: 1.5em;
-}
-
-.meal-card-favourite img {
+.favourite-card .meal-card {
     width: 100%;
-    height: 180px;
-    object-fit: cover;
-    display: block;
-    border-radius: 0 0 12px 12px;
+}
+
+.favourite-card form {
+    width: 100%;
+    display: flex;
+    justify-content: center;
 }
 
 .meal-image {
@@ -794,7 +785,7 @@ p {
     color: #fff;
 }
 
-.user-button {
+.auth-action-button {
     padding: 0.5em 1em;
     font-size: 1.5em;
     font-weight: bold;
@@ -812,7 +803,7 @@ p {
     text-align: center;
 }
 
-.user-button:hover {
+.auth-action-button:hover {
     background-color: rgba(255, 255, 255, 0.2);
     transform: translateY(-5px);
 }
@@ -850,7 +841,92 @@ p {
 .form-switch .switch-action {
         display: block;
         margin-top: 0.15em;
-    }
+}
+
+/* ============================
+   USER PROFILE
+   ============================ */
+
+.profile-container {
+    max-width: 800px;
+    margin: 2em auto;
+    padding: 2em;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 8px;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+.profile-title {
+    margin-top: 1.2em;
+}
+
+.profile-pic {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+}
+
+.profile-header {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    padding: 1em;
+    border-radius: 8px;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.profile-header p {
+    margin: 0;
+    font-size: 1.5em;
+}
+
+.profile-header:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.profile-info {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    background: none;
+    border-radius: 8px;
+}
+
+.profile-info p {
+    background: none;
+    font-size: 2em;
+}
+
+.profile-section-title {
+    margin-top: 1.3em;
+    margin-bottom: 0.4em;
+}
+
+.profile-actions {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1.4em;
+    margin: 1.2em auto 0;
+}
+
+.profile-actions .page-action-button,
+.profile-actions .auth-action-button {
+    margin: 0;
+}
+
+.profile-actions form {
+    margin: 0;
+}
+
+.profile-top3-grid {
+    max-width: 980px;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 280px));
+    justify-content: center;
+}
+
+
 
 /* ============================
    FOOTER
@@ -918,8 +994,7 @@ p {
         grid-template-columns: repeat(3, 1fr);
     }
 
-    .meal-card img,
-    .meal-card-favourite img {
+    .meal-card img {
         height: 160px;
     }
 
@@ -927,6 +1002,20 @@ p {
         font-size: 2em;
         margin: 1.4em auto;
         padding: 0.5em 1em;
+    }
+
+    .profile-container {
+        max-width: 92%;
+        padding: 1.5em;
+    }
+
+    .profile-top3-grid {
+        max-width: 860px;
+        grid-template-columns: repeat(auto-fit, minmax(210px, 260px));
+    }
+
+    .profile-title {
+        margin-top: 1em;
     }
 }
 
@@ -1029,15 +1118,7 @@ p {
         height: 140px;
     }
 
-    .meal-card-favourite img {
-        height: 140px;
-    }
-
     .meal-card {
-        padding: 0;
-    }
-
-    .meal-card-favourite {
         padding: 0;
     }
 
@@ -1090,7 +1171,7 @@ p {
         font-size: 1em;
     }
 
-    .user-button {
+    .auth-action-button {
         padding: 0.4em 0.8em;
         font-size: 1.2em;
         margin: 1.5em auto;
@@ -1101,6 +1182,54 @@ p {
         font-size: 1.2em;
         margin: 0 auto 1.5em auto;
     }
+
+    .profile-container {
+        max-width: 95%;
+        padding: 1.2em;
+        margin: 1.5em auto;
+    }
+
+    .profile-header {
+        flex-direction: column;
+        gap: 0.8em;
+        text-align: center;
+        padding: 0.8em;
+    }
+
+    .profile-pic {
+        width: 120px;
+        height: 120px;
+    }
+
+    .profile-header p {
+        width: 100%;
+        max-width: 520px;
+        margin: 0 auto;
+        font-size: 1.1em;
+    }
+
+    .profile-info {
+        flex-direction: column;
+        align-items: center;
+        gap: 0.6em;
+    }
+
+    .profile-info p {
+        font-size: 1.4em;
+    }
+
+    .profile-top3-grid {
+        grid-template-columns: repeat(auto-fit, minmax(190px, 240px));
+        gap: 1em;
+    }
+
+    .profile-section-title {
+        margin-bottom: 0.3em;
+    }
+
+    .profile-actions {
+        gap: 0.7em;
+    }
 }
 
 @media (max-width: 480px) {
@@ -1110,8 +1239,7 @@ p {
         padding: 0 5px;
     }
 
-    .meal-card img,
-    .meal-card-favourite img {
+    .meal-card img {
         height: 110px;
     }
 
@@ -1119,10 +1247,6 @@ p {
         font-size: 0.9em;
         padding: 0.6em 0.5em;
         line-height: 1.25;
-    }
-
-    .meal-card-favourite .meal-name {
-        font-size: 0.88em;
     }
 
     .fav-btn {
@@ -1161,5 +1285,39 @@ p {
 
     p { 
         font-size: 1.2em; 
+    }
+
+    .profile-container {
+        padding: 0.8em;
+        margin: 1.2em auto;
+    }
+
+    .profile-pic {
+        width: 95px;
+        height: 95px;
+    }
+
+    .profile-header p {
+        font-size: 1em;
+        padding: 0.7em;
+    }
+
+    .profile-info p {
+        font-size: 1.15em;
+        text-align: center;
+    }
+
+    .profile-top3-grid {
+        grid-template-columns: minmax(0, 280px);
+        justify-content: center;
+    }
+
+    .profile-top3-grid .meal-card {
+        width: 100%;
+        margin: 0 auto;
+    }
+
+    .profile-actions {
+        gap: 0.6em;
     }
 }

@@ -10,20 +10,16 @@
 
             {% for meal in meals %}
 
-                <div class="meal-card-favourite">
-
-                    <a href="{{ url_for('recipe_detail', id=meal.idMeal) }}">
+                <div class="favourite-card">
+                    <a class="meal-card" href="{{ url_for('recipe_detail', id=meal.idMeal) }}">
                         <p class="meal-name">{{ meal.strMeal }}</p>
                         <img src="{{ meal.strMealThumb }}" alt="{{ meal.strMeal }}">
                     </a>
 
                     <form method="POST"
                           action="{{ url_for('remove_favourite', recipe_id=meal.idMeal) }}">
-                        
                         <button type="submit" class="fav-btn">❌</button>
-
                     </form>
-
                 </div>
 
             {% endfor %}

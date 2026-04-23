@@ -1,13 +1,50 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h2>Your Profile</h2>
-    <p>Welcome to your profile page {{ current_user.username }}!</p>
-    <p>Username: {{ current_user.username }}</p>
+    <h2 class="profile-title">Your Profile</h2>
+    <div class="profile-container">
+    <div class="profile-header">
+        <img src="{{ url_for('static', filename='images/icon.png') }}" 
+        alt="GlobalGrub Logo" 
+        class="profile-pic">
+    
+        <p>Welcome, {{ current_user.username }}!</p>
+        <p>Signed in as: {{ current_user.username }}</p>
+    </div>
 
-    <div>
+    <div class="profile-info">
+        <p>Total saved recipes: {{ total }}</p>
+    </div>
+    </div>
+    {% if top3 %}
+
+        <h2 class="profile-section-title">Top 3 Favourite Recipes</h2>
+
+        <div class="search-results profile-top3-grid">
+
+        {% for meal in top3 %}
+
+            <a class="meal-card" href="{{ url_for('recipe_detail', id=meal.idMeal) }}">
+                <p class="meal-name">{{ meal.strMeal }}</p>
+                <img src="{{ meal.strMealThumb }}" alt="{{ meal.strMeal }}">
+            </a>
+
+        {% endfor %}
+
+        </div>
+
+    {% else %}
+    <div class="profile-info">
+        <p>No favourites yet.</p>
+    </div>
+    {% endif %}
+
+    <div class="profile-actions">
+        {% if total > 3 %}
+            <a class="page-action-button" href="{{ url_for('favourites') }}">View all favourites</a>
+        {% endif %}
         <form method="POST" action="{{ url_for('logout') }}">
-            <button type="submit" id="logout" class="user-button">Logout</button>
+            <button type="submit" id="logout" class="auth-action-button">Logout</button>
         </form>
     </div>
 

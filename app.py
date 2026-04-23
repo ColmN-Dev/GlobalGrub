@@ -323,10 +323,21 @@ def logout():
 @login_required
 def profile():
     
-    favs = Favourite.query.filter_by(user_id=current_user.id).all()
+    # show total number of favourites for current user
+    total = Favourite.query.filter_by(user_id=current_user.id).count()
     
-    total = len(favs)
-    top3 = favs[:3]
+    # show 3 most recently added favourites for current user
+    favs = Favourite.query.filter_by(user_id=current_user.id).order_by(Favourite.id.desc()).limit(3).all()
+    
+    top3 = [] 
+    
+    for fav in favs:
+        url = f"https://www.themealdb.com/api/json/v1/1/lookup.php?i={fav.recipe_id}"
+        response = requests.get(url, timeout=10)
+        data = response.json()
+
+        if data.get("meals"):
+            top3.append(data["meals"][0])
     
     return render_template("auth/profile.html", total=total, top3=top3)
 
