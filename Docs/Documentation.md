@@ -1,7 +1,7 @@
 
 # GlobalGrub Documentation
 
-**Last updated:** April 17, 2026
+**Last updated:** April 23, 2026
 
 ---
 
@@ -116,6 +116,25 @@ I learned that Flask-Login:
 
 ---
 
+### 7. Profile route and profile page
+
+I added a dedicated profile route and connected it to a new profile UI.
+
+Backend additions included:
+- counting total saved favourites for the logged-in user
+- selecting the latest saved favourites
+- fetching full meal details from TheMealDB for display
+
+Frontend additions included:
+- profile header with user information
+- total saved recipes summary
+- top 3 recent favourite recipe cards
+- quick actions (view all favourites and logout)
+
+This was important because favourites in the database only store recipe IDs, so the profile page needed extra route logic to transform IDs into full recipe data before rendering.
+
+---
+
 ## Design Decisions
 
 ### Theme choice
@@ -191,233 +210,170 @@ This was important for the favourites system because each user must only see the
 
 ### 1. Frontend -> backend migration
 
-At the start, API calls were handled using JavaScript `fetch()`.
-
-This caused:
-- messy frontend logic
-- inconsistent data handling
-- limited control over errors
-
-Moving API logic to Flask fixed this by centralising everything in one place.
+Issue: API calls were spread across frontend JavaScript and became hard to maintain.
+Cause: As the app grew, search, filtering, and error handling were split across multiple files.
+Fix: I moved API logic into Flask routes and rendered the data through Jinja templates so the flow stayed in one place.
 
 ---
 
 ### 2. Understanding authentication
 
-It took time to understand:
-- how sessions work
-- how `current_user` works
-- why `user_loader` is needed
-
-I learned that Flask-Login handles authentication by storing only the user ID in the session and rebuilding the user object on each request.
+Issue: Authentication flow was unclear at first.
+Cause: I needed to understand sessions, `current_user`, `user_loader`, and how Flask-Login rebuilds the user on each request.
+Fix: I mapped the full login lifecycle and aligned the routes with Flask-Login's session model.
 
 ---
 
 ### 3. Route protection change (guest -> login_required)
 
-At first, I planned to:
-- allow guests to view the favourites page
-- show a message asking them to log in
-
-This was later changed to:
-- `@login_required`
-
-Reason:
-- simpler logic
-- better security
-- cleaner route structure
+Issue: The first idea was to let guests open the favourites page and show a login message.
+Cause: Mixed guest and authenticated behavior made the route logic more complicated than it needed to be.
+Fix: I switched to `@login_required`, which kept the route cleaner and ensured only logged-in users could access saved data.
 
 ---
 
 ### 4. Database issue
 
-I encountered:
-> no such table: user
-
-This happened because the database tables were not created properly.
-
-Fix:
-```python
-with app.app_context():
-    db.create_all()
-```
+Issue: I hit `no such table: user` during authentication testing.
+Cause: The database tables had not been initialized in the active app context, so the models existed in code but not in SQLite.
+Fix: I made sure `db.create_all()` runs inside `app.app_context()` so the tables are created when the app starts.
 
 ---
 
 ### 5. API reliability issues
 
-The API sometimes returned:
-
-* empty results
-* missing fields
-* inconsistent data
-
-Fix:
-
-* used `.get()` safely
-* added fallback empty lists
-* added error handling in routes
+Issue: TheMealDB responses were sometimes empty, partial, or inconsistent.
+Cause: External API reliability varies across endpoints and some fields are missing depending on the meal.
+Fix: I used safe `.get()` lookups, fallback defaults, and route-level error handling to keep the pages from breaking.
 
 ---
 
 ### 6. Favourites system and database relationships (major challenge)
 
-One of the most challenging parts of the project was connecting users, saved recipes, and the external API data.
-
-The main difficulty was understanding how to store favourites properly and how to link everything together.
-
-At first, I considered storing favourites directly inside the User model, but this approach did not work well because:
-
-* recipes come from an external API, not my database
-* storing full recipe data would cause duplication and inconsistency
-* it would be difficult to query saved recipes properly
-
-To solve this, I created a separate Favourite table.
-
-### Key challenges faced:
-
-**Understanding relationships between tables**  
-It took time to understand how a user can have many favourites and how each favourite links back to a single user.
+Issue: Linking users, favourites, and API recipes was the most complex part of the project.
+Cause: Recipe data comes from TheMealDB, but the app only stores `recipe_id` locally, so the database and API had to be coordinated carefully.
+Fix: I created a separate `Favourite` model, added add/remove/query routes, and used user-scoped `filter_by()` checks so each user only sees and changes their own saved recipes.
 
 ---
 
-**Favourites not appearing on favourites page**
+### 7. Profile data mismatch (recipe_id shown instead of recipe details)
 
-At one stage, recipes could be successfully saved from the recipe page, and the UI (star icon) updated correctly, but nothing appeared on the favourites page.
-
-This showed that:
-- the frontend state was updating
-- but the database query or route logic was not returning the saved data correctly
-
-This required checking:
-- whether favourites were actually being committed to the database
-- whether the correct user ID was being used in the query
-- whether the favourites route was properly filtering results using `current_user`
+Issue: The profile page initially displayed raw `recipe_id` values instead of proper recipe cards.
+Cause: The favourites table stores IDs only, while the template needed the meal name and thumbnail for display.
+Fix: In the profile route, I looped through the saved IDs, looked each one up through TheMealDB, and passed full meal objects into `top3`.
 
 ---
 
-**Missing remove functionality**
+### 8. CSS layout and hover consistency issues
 
-Initially, only an "add favourite" route existed.
-
-This caused a major issue:
-- users could save recipes
-- but could not remove them
-
-Clicking the save button again did nothing because no remove logic existed.
-
-To fix this, I added a separate remove route, which allowed:
-- removing favourites from the recipe page
-- removing favourites from the favourites page
-
-This completed the full save/unsave functionality.
+Issue: Card layout and hover behavior were inconsistent across recipes, favourites, and profile.
+Cause: Duplicate card classes and shared styling were pulling card and action behavior in different directions.
+Fix: I standardized the card styling under `meal-card`, used clearer wrappers where needed, and added profile-specific responsive rules so the top cards stayed centered.
 
 ---
 
-**Save/unsave logic**
+### 9. Code organisation
 
-Another challenge was handling how saving should behave when a recipe is already saved.
-
-This required:
-- checking if a favourite already exists in the database
-- deciding whether to insert a new row or delete an existing one
-
-Without this logic, the system would either:
-- fail to remove items
-- or behave inconsistently
-
----
-
-**Querying user-specific data**
-
-I used `query.filter_by()` to:
-
-* get only the logged-in user’s favourites
-* ensure users cannot see other users’ saved data
-
-This was important because all users share the same favourites table.
-
----
-
-**Connecting API data with database data**
-
-A major challenge was that recipe data comes from TheMealDB API, while saved data is stored in SQLite.
-
-This meant I had to match:
-
-* API recipe IDs
-* database stored `recipe_id` values
-
-This required careful logic in routes and templates to:
-- correctly display saved recipes
-- show the correct saved/unsaved state (i.e. star icon)
-
----
-
-**Multiple routes working together**
-
-The favourites system required multiple routes working together:
-
-- add favourite
-- remove favourite
-- favourites page
-
-At first, not all of these were implemented, which caused incomplete functionality.
-
-Once all routes were properly connected, the system worked as expected.
-
----
-
-### 7. Code organisation
-
-At the start, everything was inside one file:
-
-* API logic
-* authentication
-* database queries
-* route handling
-
-Over time, I improved structure by grouping logic into clearer sections inside `app.py`.
+Issue: Early development placed most logic in one area, making growth harder to manage.
+Cause: Features were added quickly before the structure was refined.
+Fix: I reorganized `app.py` into clearer sections by responsibility so the code is easier to read and maintain.
 
 ---
 
 ## Current limitations
 
-* Favourites system works but still needs UI improvements
-* Flash messages are not implemented yet
-* Profile page is basic and will be improved later
-* Recipe names called from the API differ in length which causes inconsistent layout on recipe and favourites pages
+The favourites system works, but the UI could still be improved further. Flash messages are not implemented yet. Recipe names from the API also vary in length, which can still affect layout consistency on the recipe and favourites pages.
+
+---
+
+## Future improvements
+
+I plan to add a small JavaScript interactivity layer to improve usability without overcomplicating the application. The main addition will be a password visibility toggle on the login and signup forms, which will make it easier for users to enter credentials correctly. I also want to improve form validation feedback with simple regex-based checks for password strength, and optionally username formatting, so users get immediate visual feedback when inputs do not meet the required rules. In addition, I plan to replace blank error pages with clearer, user-friendly messages on the same page where the problem occurs. Overall, the aim is to keep JavaScript minimal and practical so that it supports the Flask backend rather than duplicating its responsibilities.
 
 ---
 
 ## What I learned
 
-* How Flask applications are structured
-* How frontend and backend work together
-* How authentication and sessions work
-* How SQLAlchemy queries work (`filter_by`)
-* How to handle API errors properly
-* How system design changes as projects grow
+I learned how Flask applications are structured and how frontend and backend work together in a full-stack project. I also learned how authentication and sessions work, how SQLAlchemy queries such as `filter_by()` support user-specific data, how to handle API errors properly, and how system design changes as projects grow.
 
 ---
 
 ## Credits
 
+**These sources were used as learning references and adapted to fit the specific requirements of this project.**
+
+### Authentication system
+
 Authentication system based on:
 
-[https://github.com/neupanic/Python-Flask-Authentication-Tutorial](https://github.com/neupanic/Python-Flask-Authentication-Tutorial)
+- [Python Flask Authentication Tutorial (GitHub)](https://github.com/neupanic/Python-Flask-Authentication-Tutorial)
 
 As well as the YouTube video tutorial
 
-Used for:
+**Used for:**
+- Flask-Login setup  
+- authentication flow  
+- password hashing  
 
-* Flask-Login setup
-* authentication flow
-* password hashing
+**Adapted for this project by:**
+- connecting it to recipe system  
+- adding favourites support  
+- adjusting routing and templates  
+- adding custom validation and error handling  
 
-Adapted for this project by:
+---
 
-* connecting it to recipe system
-* adding favourites support
-* adjusting routing and templates
-* adding custom validation and error handling
+### Database and SQLAlchemy
+
+Database setup and model structure were informed by:
+
+- [Flask Mega-Tutorial Part IV: Database (Miguel Grinberg)](https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-iv-database)
+
+- [Connect Flask to a Database with Flask-SQLAlchemy (GeeksforGeeks)](https://www.geeksforgeeks.org/python/connect-flask-to-a-database-with-flask-sqlalchemy/)  
+
+**Used for:**
+- understanding how SQLAlchemy models are defined  
+- structuring database tables using Python classes  
+- basic database setup and configuration  
+- learning how to create and initialise tables  
+
+**Adapted for this project by:**
+- creating a User model for authentication  
+- creating a Favourite model to store saved recipes  
+- linking favourites to users using a one-to-many relationship  
+- integrating database logic into Flask routes  
+
+---
+
+### Flask Structure and Application Flow
+
+General Flask structure and application flow were supported by:
+
+- [Flask Tutorial (GeeksforGeeks)](https://www.geeksforgeeks.org/python/flask-tutorial/)  
+
+**Used for:**
+- understanding how Flask routes handle requests  
+- how templates and backend logic connect  
+- structuring the application from frontend to backend  
+- reinforcing the request → route → response flow  
+
+**Adapted for this project by:**
+- organising routes for recipes, authentication, and favourites  
+- using Jinja templates for dynamic page rendering  
+- structuring query parameter handling for filtering  
+
+---
+
+### Favourites System Design (Derived Learning)
+
+The favourites system design was built using combined understanding from:
+
+- [Flask Mega-Tutorial Part IV: Database (Miguel Grinberg)](https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-iv-database)  
+
+- [Connect Flask to a Database with Flask-SQLAlchemy (GeeksforGeeks)](https://www.geeksforgeeks.org/python/connect-flask-to-a-database-with-flask-sqlalchemy/)  
+
+**Applied in this project to:**
+- separate favourites into their own table  
+- avoid storing full recipe data locally  
+- link users to saved recipes using foreign keys  
+- query user-specific data securely using `filter_by()`  
