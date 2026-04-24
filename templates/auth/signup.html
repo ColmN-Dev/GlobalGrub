@@ -9,7 +9,10 @@
         </div>
         <div>
             <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required placeholder="Password">
+            <div class="password-field">
+                <input type="password" id="password" name="password" required placeholder="Password">
+                <button type="button" class="eye-icon closed" id="togglePassword" aria-label="Toggle password visibility"></button>
+            </div>
         </div>
         <button type="submit" class="auth-action-button">Sign Up</button>
     </form>

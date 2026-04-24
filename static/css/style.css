@@ -772,6 +772,7 @@ p {
 
 .login-form input {
     padding: 0.5em 1em;
+    width: 100%;
     font-size: 1.2em;
     border: none;
     border-radius: 4px;
@@ -783,6 +784,47 @@ p {
 
 .login-form input::placeholder {
     color: #fff;
+}
+
+.password-field {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.password-field input {
+    width: 100%;
+    padding-right: 40px;
+}
+
+/* Password visibility toggle */
+
+.eye-icon {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 30px;
+    height: 30px;
+    border: none;
+    cursor: pointer;
+    background: none;
+    outline: none;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+}
+
+.eye-icon:focus {
+    outline: 2px solid rgba(255,255,255,0.4);
+}
+
+.eye-icon.open {
+    background-image: url("../images/eye-open.svg");
+}
+
+.eye-icon.closed {
+    background-image: url("../images/eye-closed.svg");
 }
 
 .auth-action-button {
@@ -878,10 +920,6 @@ p {
 .profile-header p {
     margin: 0;
     font-size: 1.5em;
-}
-
-.profile-header:hover {
-    background-color: rgba(255, 255, 255, 0.2);
 }
 
 .profile-info {
