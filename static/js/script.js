@@ -30,7 +30,11 @@
 
         // Show clear button when user types in the search input
         searchInput.addEventListener("input", () => {
-            clearBtn.style.display = searchInput.value.trim() !== "" ? "block" : "none";
+            if (searchInput.value.trim() !== "") {
+                clearBtn.style.display = "block";
+            } else {
+                clearBtn.style.display = "none";
+            }
         });
 
         // Clear search input and hide clear button when clicked

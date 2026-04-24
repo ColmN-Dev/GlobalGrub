@@ -1,6 +1,6 @@
 # GlobalGrub
 
-Last updated: April 17, 2026
+Last updated: April 24, 2026
 
 ## Repository and Live App
 
@@ -9,21 +9,22 @@ Last updated: April 17, 2026
 
 ## Overview
 
-GlobalGrub is a Flask web application for browsing international recipes using TheMealDB API. The app includes server-side rendering with Jinja templates, recipe search/filter features, user authentication with Flask-Login, and a favourites system.
+GlobalGrub is a Flask web application for browsing international recipes using TheMealDB API. The app includes server-side rendering with Jinja templates, recipe search and filter features, user authentication with Flask-Login, and a favourites system backed by SQLite.
 
 ## Key Features
 
 - Multi-page Flask app with route-based navigation
-- Countries page with A-Z MealDB regions
+- Countries page with A-Z list of MealDB regions
 - Recipe browsing by region
 - Recipe name search with optional dessert filter
-- Recipe detail page with ingredient parsing
+- Recipe detail page with parsed ingredient list
 - User signup, login, logout, and profile page
 - Add/remove favourite recipes for logged-in users
-- Favourites page showing saved recipes
+- Favourites page showing all saved recipes
 - Password hashing with Flask-Bcrypt
-- SQLite user persistence via Flask-SQLAlchemy
-- Responsive layout (desktop navbar and mobile menu)
+- SQLite user and favourites persistence via Flask-SQLAlchemy
+- Responsive layout with desktop navbar and mobile hamburger menu
+- Cron job configured to keep Render service warm and avoid cold start delays
 
 ## Tech Stack
 
@@ -41,8 +42,7 @@ GlobalGrub is a Flask web application for browsing international recipes using T
 - `templates/`
 - `templates/auth/`
 - `static/css/style.css`
-- `static/js/main.js`
-- `static/js/search.js`
+- `static/js/script.js`
 - `Docs/Documentation.md`
 
 ## Local Development Setup
@@ -85,6 +85,7 @@ python app.py
 
 - The SQLite database file is created in the Flask `instance/` folder (`instance/globalgrub.db`).
 - Tables are created automatically at startup using `db.create_all()`.
+- Auth routes are prefixed under `/auth/` (e.g. `/auth/login`, `/auth/profile`).
 
 ## Deployment (Render)
 
@@ -95,8 +96,15 @@ Current deployment uses Render Web Service with:
 
 ## Current Limitations
 
-- Profile page is functional but still basic
-- Favourites are fetched from API one by one and can be optimized later
+- Favourites are fetched from the API one by one per request and could be optimised later
+- No frontend form validation yet — planned for next development phase
+- No custom error pages yet — a `404.html` and general error handling are planned next
+
+## Planned Next Steps
+
+- Flash messages for login, signup, and favourites feedback
+- Frontend and backend form validation with regex for password strength
+- Custom `404.html` and error page handling to avoid blank pages on crashes
 
 ## Attribution
 
