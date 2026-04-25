@@ -6,7 +6,7 @@
     <div class="profile-header">
         <img src="{{ url_for('static', filename='images/icon.png') }}" 
         alt="GlobalGrub Logo" 
-        class="profile-pic">
+        class="profile-pic" loading="lazy">
     
         <p>Welcome, {{ current_user.username }}!</p>
         <p>Signed in as: {{ current_user.username }}</p>
@@ -26,7 +26,7 @@
 
             <a class="meal-card" href="{{ url_for('recipe_detail', id=meal.idMeal) }}" aria-label="View recipe details">
                 <p class="meal-name">{{ meal.strMeal }}</p>
-                <img src="{{ meal.strMealThumb }}" alt="{{ meal.strMeal }}">
+                <img src="{{ meal.strMealThumb }}" alt="{{ meal.strMeal }}" loading="lazy">
             </a>
 
         {% endfor %}

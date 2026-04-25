@@ -47,7 +47,7 @@
             {% for meal in meals %}
                 <a href="{{ url_for('recipe_detail', id=meal.idMeal) }}" class="meal-card">
                     <p id="meal-name" class="meal-name">{{ meal.strMeal }}</p>
-                    <img src="{{ meal.strMealThumb }}" alt="{{ meal.strMeal }} thumbnail">
+                    <img src="{{ meal.strMealThumb }}" alt="{{ meal.strMeal }} thumbnail" loading="lazy">
                 </a>
             {% endfor %}
         </div>

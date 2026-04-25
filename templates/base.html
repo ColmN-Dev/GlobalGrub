@@ -46,7 +46,7 @@
 <body>
     <header class="navbar">
         <div class="navbar-brand">
-         <img src="{{ url_for('static', filename='images/icon.png') }}" alt="GlobalGrub Icon" class="icon">
+         <img src="{{ url_for('static', filename='images/icon.png') }}" alt="GlobalGrub Icon" class="icon" loading="lazy">
          <a href="{{ url_for('home') }}">GlobalGrub</a>
         </div>
         <nav class="navbar-links" aria-label="Primary navigation">
@@ -89,7 +89,7 @@
     {% endblock %}
 
         <footer class="footer">
-            <img src="{{ url_for('static', filename='images/icon.png') }}" alt="GlobalGrub Icon" class="footer-icon">
+            <img src="{{ url_for('static', filename='images/icon.png') }}" alt="GlobalGrub Icon" class="footer-icon" loading="lazy">
             <p class="footer-text">GlobalGrub - Your Gateway to World Cuisine</p>
             <p class="footer-text">Discover, Save, and Share Your Favourite Recipes from Around the Globe</p>
             <p class="footer-text">© 2026 GlobalGrub. Released under the <a href="https://opensource.org/licenses/MIT" target="_blank" style="color: inherit; text-decoration: underline;">MIT License</a>.</p>
