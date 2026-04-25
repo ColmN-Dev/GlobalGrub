@@ -351,6 +351,8 @@ def profile():
 with app.app_context():
     db.create_all()
 
-
+# run the app on port from environment or default to 5000, with debug off in production
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    is_production = os.environ.get("FLASK_ENV") == "production"
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port, debug=not is_production)
