@@ -128,17 +128,26 @@ body {
     right: -250px;
     width: 250px;
     height: 100%;
-    background: rgba(0,0,0,0.9);
+    background: rgba(0, 0, 0, 0.9);
     padding: 4rem 2rem;
     display: flex;
-    gap: 15px;
     flex-direction: column;
-    transition: right 0.3s ease;
+    gap: 15px;
     z-index: 999;
+    transition: right 0.3s ease, visibility 0.3s;
+    visibility: hidden;
+    max-height: 100vh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 .mobile-menu.open {
     right: 0;
+    visibility: visible;
+}
+
+body.menu-open {
+    overflow: hidden;
 }
 
 .mobile-menu a {
@@ -481,8 +490,8 @@ body.menu-open {
 .spinner {
     width: 40px;
     height: 40px;
-    border: 4px solid rgba(255, 255, 255, 0.3);
-    border-top: 4px solid #fff;
+    border: 4px solid rgba(255, 255, 255, 0.2);
+    border-top: 4px solid #ffffff;
     border-radius: 50%;
     animation: spin 1s linear infinite;
     display: inline-block;
@@ -1399,16 +1408,4 @@ p {
     .profile-actions {
         gap: 0.6em;
     }
-}
-
-/* Enable scrolling for the menu when too tall and allow smooth touch scrolling */
-.mobile-menu {
-    max-height: 100vh;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-}
-
-/* Stop the background page from scrolling when menu is open */
-body.menu-open {
-    overflow: hidden;
 }
