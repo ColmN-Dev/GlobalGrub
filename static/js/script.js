@@ -55,20 +55,20 @@
 
     // Password visibility toggle
     const eyeIcon = document.getElementById("togglePassword");
-    const input = document.getElementById("password");
+    const passwordInput = document.getElementById("password");
 
-    if (eyeIcon && input) {
-      eyeIcon.addEventListener("click", () => {
-          if (input.type === "password") {
-              input.type = "text";
-              eyeIcon.classList.add("open");
-              eyeIcon.classList.remove("closed");
-        } else {
-            input.type = "password";
-            eyeIcon.classList.add("closed");
-            eyeIcon.classList.remove("open");
-        }
-      });
+    if (eyeIcon && passwordInput) {
+        eyeIcon.addEventListener("click", () => {
+            if (passwordInput.type === "password") {
+                passwordInput.type = "text";
+                eyeIcon.classList.add("open");
+                eyeIcon.classList.remove("closed");
+            } else {
+                passwordInput.type = "password";
+                eyeIcon.classList.add("closed");
+                eyeIcon.classList.remove("open");
+            }
+        });
     }
 
 })();

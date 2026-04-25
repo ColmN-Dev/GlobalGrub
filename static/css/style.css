@@ -1359,3 +1359,15 @@ p {
         gap: 0.6em;
     }
 }
+
+/* Enable scrolling for the menu when too tall and allow smooth touch scrolling */
+.mobile-menu {
+    max-height: 100vh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Stop the background page from scrolling when menu is open */
+body.menu-open {
+    overflow: hidden;
+}
