@@ -1,3 +1,9 @@
+/**
+ * Project Name: [Global Grub]
+ * License: MIT
+ * Copyright (c) 2026 [Colm Nolan]
+ */
+
 (() => {
     "use strict";
 
@@ -9,6 +15,10 @@
         hamburger.addEventListener("click", () => {
             mobileMenu.classList.toggle("open");
             document.body.classList.toggle("menu-open");
+
+            const isOpen = mobileMenu.classList.contains("open");
+            hamburger.setAttribute("aria-expanded", String(isOpen));
+            mobileMenu.setAttribute("aria-hidden", String(!isOpen));
         });
 
         // Close mobile menu when a link is clicked
@@ -16,6 +26,8 @@
             link.addEventListener("click", () => {
                 mobileMenu.classList.remove("open");
                 document.body.classList.remove("menu-open");
+                hamburger.setAttribute("aria-expanded", "false");
+                mobileMenu.setAttribute("aria-hidden", "true");
             });
         });
     }
@@ -27,6 +39,26 @@
 
     if (searchForm && searchInput && clearBtn) {
         clearBtn.style.display = "none";
+
+        // Show spinner when form is submitted
+        searchForm.addEventListener("submit", () => {
+            const spinner = document.getElementById("loading-spinner");
+            const resultsArea = document.querySelector(".search-results");
+
+            // Show the loading spinner
+            if (spinner) {
+                spinner.classList.remove("hidden");
+                spinner.setAttribute("aria-hidden", "false");
+            }
+
+            // Dim the previous results area while loading
+            if (resultsArea) {
+                resultsArea.style.opacity = "0.3";
+                // Disable pointer events to prevent interaction with old results
+                resultsArea.style.pointerEvents = "none";
+                resultsArea.setAttribute("aria-busy", "true");
+            }
+        });
 
         // Show clear button when user types in the search input
         searchInput.addEventListener("input", () => {
@@ -63,10 +95,14 @@
                 passwordInput.type = "text";
                 eyeIcon.classList.add("open");
                 eyeIcon.classList.remove("closed");
+                eyeIcon.setAttribute("aria-label", "Hide password");
+                eyeIcon.setAttribute("aria-pressed", "true");
             } else {
                 passwordInput.type = "password";
                 eyeIcon.classList.add("closed");
                 eyeIcon.classList.remove("open");
+                eyeIcon.setAttribute("aria-label", "Show password");
+                eyeIcon.setAttribute("aria-pressed", "false");
             }
         });
     }

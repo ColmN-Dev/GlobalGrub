@@ -16,7 +16,7 @@
                 {{ url_for('add_favourite', recipe_id=meal.idMeal) }}
             {% endif %}">
 
-    <button type="submit" class="fav-btn">
+    <button type="submit" class="fav-btn" aria-label="{% if saved %}Remove from favourites{% else %}Add to favourites{% endif %}" aria-pressed="{{ 'true' if saved else 'false' }}">
 
         {% if saved %}
             ★

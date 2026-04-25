@@ -5,18 +5,18 @@
     <form method="POST" action="{{ url_for('signup') }}" class="login-form">
         <div>
             <label for="username">Username:</label>
-            <input type="text" id="username" name="username" required placeholder="Username">
+            <input type="text" id="username" name="username" required placeholder="Username" aria-label="Enter your username">
         </div>
         <div>
             <label for="password">Password:</label>
             <div class="password-field">
-                <input type="password" id="password" name="password" required placeholder="Password">
-                <button type="button" class="eye-icon closed" id="togglePassword" aria-label="Toggle password visibility"></button>
+                <input type="password" id="password" name="password" required placeholder="Password" aria-label="Enter your password">
+                <button type="button" class="eye-icon closed" id="togglePassword" aria-label="Show password" aria-controls="password" aria-pressed="false"></button>
             </div>
         </div>
-        <button type="submit" class="auth-action-button">Sign Up</button>
+        <button type="submit" class="auth-action-button" aria-label="Submit sign up form">Sign Up</button>
     </form>
-    <a href="{{ url_for('login') }}" class="form-switch">
+    <a href="{{ url_for('login') }}" class="form-switch" aria-label="Switch to login form">
         <span class="switch-question">Already have an account?</span>
         <span class="switch-action">Log in here.</span>
     </a>

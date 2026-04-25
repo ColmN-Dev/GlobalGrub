@@ -1,3 +1,8 @@
+# Project Name: [Global Grub]
+# License: MIT
+# Copyright (c) 2026 [Colm Nolan]
+
+
 from flask import Flask, render_template, request, redirect, url_for
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from flask_sqlalchemy import SQLAlchemy

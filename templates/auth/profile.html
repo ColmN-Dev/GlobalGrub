@@ -24,7 +24,7 @@
 
         {% for meal in top3 %}
 
-            <a class="meal-card" href="{{ url_for('recipe_detail', id=meal.idMeal) }}">
+            <a class="meal-card" href="{{ url_for('recipe_detail', id=meal.idMeal) }}" aria-label="View recipe details">
                 <p class="meal-name">{{ meal.strMeal }}</p>
                 <img src="{{ meal.strMealThumb }}" alt="{{ meal.strMeal }}">
             </a>
@@ -41,10 +41,10 @@
 
     <div class="profile-actions">
         {% if total > 3 %}
-            <a class="page-action-button" href="{{ url_for('favourites') }}">View all favourites</a>
+            <a class="page-action-button" href="{{ url_for('favourites') }}" aria-label="View all favourite recipes">View all favourites</a>
         {% endif %}
         <form method="POST" action="{{ url_for('logout') }}">
-            <button type="submit" id="logout" class="auth-action-button">Logout</button>
+            <button type="submit" id="logout" class="auth-action-button" aria-label="Submit logout form">Logout</button>
         </form>
     </div>
 

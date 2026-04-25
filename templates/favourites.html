@@ -18,7 +18,7 @@
 
                     <form method="POST"
                           action="{{ url_for('remove_favourite', recipe_id=meal.idMeal) }}">
-                        <button type="submit" class="fav-btn">❌</button>
+                        <button type="submit" class="fav-btn" aria-label="Remove {{ meal.strMeal }} from favourites">❌</button>
                     </form>
                 </div>
 
