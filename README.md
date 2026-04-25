@@ -13,20 +13,18 @@ GlobalGrub is a Flask web application for browsing international recipes using T
 
 ## Key Features
 
-- Multi-page Flask app with route-based navigation
-- Countries page with A-Z list of MealDB regions
-- Recipe browsing by region
-- Recipe name search with optional dessert filter
-- Recipe detail page with parsed ingredient list
-- User signup, login, logout, and profile page
-- Add/remove favourite recipes for logged-in users
-- Favourites page showing all saved recipes
-- Password hashing with Flask-Bcrypt
-- SQLite user and favourites persistence via Flask-SQLAlchemy
-- Responsive layout with desktop navbar and mobile hamburger menu
-- Cron job configured to keep Render service warm and avoid cold start delays
-- Loading spinner on recipes page during search requests
-- Dynamic ARIA attribute updates via JavaScript for accessible interactive elements
+- Multi-page Flask application with structured route-based navigation  
+- Browse recipes by region using TheMealDB (A–Z country listing)  
+- Recipe search with optional dessert filtering  
+- Detailed recipe view with dynamically parsed ingredient list  
+- Full authentication system (signup, login, logout, profile) using Flask-Login  
+- Favourite recipes system with persistent storage via Flask-SQLAlchemy (SQLite)  
+- Secure password hashing using Flask-Bcrypt  
+- Responsive UI with desktop navigation and mobile hamburger menu  
+- Loading spinner with dynamic ARIA updates for accessible async interactions  
+- Lazy loading on images to improve performance and reduce initial load time  
+- Environment-aware configuration for development and production (debug, port handling)  
+- Deployed with Gunicorn and a cron job to prevent cold starts on Render  
 
 ## Tech Stack
 
