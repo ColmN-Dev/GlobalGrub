@@ -1,6 +1,6 @@
 # GlobalGrub
 
-Last updated: April 24, 2026
+Last updated: April 25, 2026
 
 ## Repository and Live App
 
@@ -25,6 +25,8 @@ GlobalGrub is a Flask web application for browsing international recipes using T
 - SQLite user and favourites persistence via Flask-SQLAlchemy
 - Responsive layout with desktop navbar and mobile hamburger menu
 - Cron job configured to keep Render service warm and avoid cold start delays
+- Loading spinner on recipes page during search requests
+- Dynamic ARIA attribute updates via JavaScript for accessible interactive elements
 
 ## Tech Stack
 

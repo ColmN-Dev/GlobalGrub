@@ -1,6 +1,6 @@
 # GlobalGrub Documentation
 
-**Last updated:** April 24, 2026
+**Last updated:** April 25, 2026
 
 ---
 
@@ -48,7 +48,7 @@ I added a dedicated profile route and connected it to a new profile UI. The back
 ---
 
 ### 8. JavaScript Interactivity
-I implemented a JavaScript layer to improve usability without overcomplicating the application. The features added included a mobile hamburger menu toggle that auto-closes on navigation and a search input clear button. The main addition was a password visibility toggle on the login and signup forms, which switches the input between `password` and `text` to help users enter credentials correctly. This ensures JavaScript remains minimal and practical, supporting the Flask backend rather than duplicating its responsibilities.
+I implemented a JavaScript layer to improve usability without overcomplicating the application. The features added included a mobile hamburger menu toggle that auto-closes on navigation, and a search input clear button that also responds to the Escape key. The main addition was a password visibility toggle on the login and signup forms, which switches the input between `password` and `text` to help users enter credentials correctly. A loading spinner was also added to the recipes page search form, which appears and dims the previous results while a new search request is loading. JavaScript is also used to dynamically update ARIA attributes at runtime, such as `aria-expanded` on the hamburger menu, `aria-busy` on the results area during loading, and `aria-pressed` and `aria-label` on the password toggle. This ensures JavaScript remains minimal and practical, supporting the Flask backend rather than duplicating its responsibilities.
 
 ---
 
