@@ -24,7 +24,7 @@
 
         {% for meal in top3 %}
 
-            <a class="meal-card" href="{{ url_for('recipe_detail', id=meal.idMeal) }}" aria-label="View recipe details">
+            <a class="meal-card" href="{{ url_for('recipe_detail', recipe_id=meal.idMeal) }}" aria-label="View recipe details">
                 <p class="meal-name">{{ meal.strMeal }}</p>
                 <img src="{{ meal.strMealThumb }}" alt="{{ meal.strMeal }}" loading="lazy">
             </a>

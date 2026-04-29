@@ -3,7 +3,7 @@
 # Copyright (c) 2026 [Colm Nolan]
 
 
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
@@ -31,7 +31,11 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 
 # redirect unauthenticated users to login
-login_manager.login_view = 'login'
+login_manager.login_view = "login"
+
+# set custom login message and category for flashing login required routes
+login_manager.login_message = "Please login to continue."
+login_manager.login_message_category = "error"
 
 
 # reload user from session for Flask-Login
@@ -179,6 +183,7 @@ def add_favourite(recipe_id):
         fav = Favourite(user_id=current_user.id, recipe_id=recipe_id)
         db.session.add(fav)
         db.session.commit()
+        flash("Recipe added to favourites!", "success")
 
     return redirect(request.referrer or url_for("recipes"))
 
@@ -210,6 +215,9 @@ def remove_favourite(recipe_id):
     if fav:
         db.session.delete(fav)
         db.session.commit()
+        
+        if request.referrer and "favourites" in request.referrer:
+            flash("Recipe removed from favourites!", "success")
 
     return redirect(request.referrer or url_for("favourites"))
 
@@ -226,12 +234,14 @@ def signup():
 
         # basic validation so empty values do not get sent to database
         if not username or not password:
-            return "Username and password are required", 400
+            flash("Username and password are required", "error")
+            return render_template("auth/signup.html", username=username)
 
         # check if user already exists in database
         existing_user = User.query.filter_by(username=username).first()
         if existing_user:
-            return "Username already exists", 400
+            flash("Username already exists", "error")
+            return render_template("auth/signup.html", username=username)
 
         # create user object and hash password before saving
         new_user = User(username=username)
@@ -240,6 +250,8 @@ def signup():
         # save user to database
         db.session.add(new_user)
         db.session.commit()
+        
+        flash("Account created successfully! Please log in.", "success")
 
         # send user to login after successful signup
         return redirect(url_for("login"))
@@ -259,7 +271,8 @@ def login():
         password = (request.form.get("password") or "").strip()
         
         if not username or not password:
-            return "Username and password are required", 400
+            flash("Username and password are required", "error")
+            return render_template("auth/login.html", username=username)
 
         # look up user in database
         user = User.query.filter_by(username=username).first()
@@ -268,12 +281,15 @@ def login():
         if user and user.check_password(password):
             # log user in and create session cookie
             login_user(user)
+            
+            flash("Logged in successfully!", "success")
 
             # send to profile after successful login
             return redirect(url_for("profile"))
 
         # wrong credentials
-        return "Invalid username or password", 401
+        flash("Invalid username or password", "error")
+        return render_template("auth/login.html", username=username)
 
     # show login page (GET request)
     return render_template("auth/login.html")
@@ -285,6 +301,9 @@ def login():
 def logout():
     # clear session
     logout_user()
+    
+    flash("Logged out successfully!", "success")
+    
     return redirect(url_for("login"))
 
 

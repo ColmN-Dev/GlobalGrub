@@ -11,7 +11,7 @@
             {% for meal in meals %}
 
                 <div class="favourite-card">
-                    <a class="meal-card" href="{{ url_for('recipe_detail', id=meal.idMeal) }}">
+                    <a class="meal-card" href="{{ url_for('recipe_detail', recipe_id=meal.idMeal) }}">
                         <p class="meal-name">{{ meal.strMeal }}</p>
                         <img src="{{ meal.strMealThumb }}" alt="{{ meal.strMeal }}" loading="lazy">
                     </a>
