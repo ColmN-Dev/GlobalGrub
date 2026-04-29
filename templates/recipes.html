@@ -6,51 +6,62 @@
 
     <!-- Search form -->
     <form action="{{ url_for('recipes') }}" method="GET" id="searchForm">
-        <input type="text" id="mealSearch" name="search" placeholder="Search for recipes..." autocomplete="off" aria-label="Search recipes by name" aria-controls="recipe-results">
+        <input type="text" id="mealSearch" name="search"
+               placeholder="Search for recipes..."
+               autocomplete="off"
+               aria-label="Search recipes by name"
+               aria-controls="recipe-results">
+
         <div class="course-toggle" role="radiogroup" aria-label="Course filter">
-            <input type="radio" id="course-all" name="course" value="all" {% if course != 'dessert' %}checked{% endif %} aria-label="Show all recipe categories">
+            <input type="radio" id="course-all" name="course" value="all"
+                   {% if course != 'dessert' %}checked{% endif %}>
             <label for="course-all">All</label>
 
-            <input type="radio" id="course-dessert" name="course" value="dessert" {% if course == 'dessert' %}checked{% endif %} aria-label="Show dessert recipes only">
+            <input type="radio" id="course-dessert" name="course" value="dessert"
+                   {% if course == 'dessert' %}checked{% endif %}>
             <label for="course-dessert">Dessert</label>
         </div>
-        <button type="button" id="clear-button" aria-label="Clear search input">Clear</button>
-        <button type="submit" id="submit-button" aria-label="Run recipe search">Search</button>
+
+        <button type="button" id="clear-button">Clear</button>
+        <button type="submit" id="submit-button">Search</button>
     </form>
 
-        <div id="loading-spinner" class="spinner-container hidden" role="status" aria-live="polite" aria-hidden="true" aria-label="Loading search results">
-            <div class="spinner"></div>
-            <p>Loading...</p>
-        </div>
+    <div id="loading-spinner" class="spinner-container hidden">
+        <div class="spinner"></div>
+        <p>Loading...</p>
+    </div>
 
-        {% if message %}
+    {% if message %}
         <p class="empty-search">{{ message }}</p>
-        {% endif %}
+    {% endif %}
 
-        {% if region %}
-            <p class="active-filter">Region: {{ region }}</p>
-        {% endif %}
+    {% if search or region %}
+        <p class="active-filter">
+            {% if search %}Search: {{ search }}{% endif %}
+            {% if region %} | Region: {{ region }}{% endif %}
+            {% if course == 'dessert' %} | Dessert only{% endif %}
+        </p>
+    {% endif %}
 
-        {% if search %}
-            <p class="active-filter">Search results for: {{ search }}</p>
-        {% endif %}
+    {% if meals and meals|length > 0 %}
+        <p class="results-count">
+            {{ meals|length }} recipe(s) found
+        </p>
 
-        {% if search and course == 'dessert' %}
-            <p class="active-filter">Course: Dessert</p>
-        {% endif %}
-
-        <!-- Search results -->
-        {% if meals %}
-        <p class="results-count" role="status" aria-live="polite">{{ meals|length }} recipe(s) found</p> 
-
-        <div class="search-results" id="recipe-results" aria-live="polite" aria-busy="false">
+        <div class="search-results" id="recipe-results">
             {% for meal in meals %}
-                <a href="{{ url_for('recipe_detail', id=meal.idMeal) }}" class="meal-card">
-                    <p id="meal-name" class="meal-name">{{ meal.strMeal }}</p>
-                    <img src="{{ meal.strMealThumb }}" alt="{{ meal.strMeal }} thumbnail" loading="lazy">
+                <a href="{{ url_for('recipe_detail', recipe_id=meal.idMeal) }}"
+                   class="meal-card">
+
+                    <p class="meal-name">{{ meal.strMeal }}</p>
+
+                    <img src="{{ meal.strMealThumb }}"
+                         alt="{{ meal.strMeal }} thumbnail"
+                         loading="lazy">
                 </a>
             {% endfor %}
         </div>
     {% endif %}
+
 </main>
 {% endblock %}
