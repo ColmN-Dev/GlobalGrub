@@ -17,6 +17,13 @@ load_dotenv()
 # initialize Flask app
 app = Flask(__name__)
 
+# import error handlers after app is created
+import errors
+
+# register error handlers from errors module to avoid circular import
+app.register_error_handler(404, errors.not_found)
+app.register_error_handler(500, errors.internal_error)
+
 # app configuration
 # require SECRET_KEY from environment/.env
 app.secret_key = os.environ["SECRET_KEY"]
