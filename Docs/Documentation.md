@@ -119,12 +119,28 @@ https://www.geeksforgeeks.org/python/flask-message-flashing/
 ---
 
 ### 10. Error handling
-I added error handling using:
-- `try/except` blocks for API calls
-- `404` responses for missing recipes
-- `500` responses for unexpected failures
+I implemented error handling using:
+- `try/except` blocks for API calls  
+- custom `404` and `500` error pages  
+- Flask’s built-in error handling system  
 
-This prevents the application from crashing when the API returns invalid or missing data.
+Initially, I followed Flask’s decorator-based approach (`@app.errorhandler`), but I encountered circular import issues when separating error logic into a dedicated file.
+
+Previously, `errors.py` imported the Flask app instance:
+```python
+from app import app
+```
+
+while `app.py` also imported `errors`, creating a circular dependency. This prevented the error handlers from being registered correctly and caused Flask to fall back to default error pages.
+
+To resolve this, I refactored the error handlers into standalone functions and registered them in `app.py` using:
+
+```python
+app.register_error_handler(404, errors.not_found)
+app.register_error_handler(500, errors.internal_error)
+```
+
+This removed the circular import and ensured that custom templates (`errors/404.html`, `errors/500.html`) are rendered correctly.
 
 Reference:
 https://flask.palletsprojects.com/en/stable/errorhandling/
@@ -237,18 +253,29 @@ Render free tier caused delays, so I used a cron-job ping every 10 minutes to ke
 
 ---
 
+### 11. Circular import issue (error handling)
+When separating error handling into `errors.py`, I encountered a circular import between `app.py` and `errors.py`. This prevented the error handlers from being registered correctly, causing Flask to fall back to its default error pages.
+
+I resolved this by:
+- removing the dependency on the Flask app instance from `errors.py`  
+- converting error handlers into standalone functions  
+- registering them in `app.py` using `app.register_error_handler`  
+
+This improved the structure of the application and avoided import-related issues.
+
+---
+
 ## Current limitations
 
 - API calls for favourites are not cached
 - No frontend form validation yet
-- Custom error pages are not implemented yet
+- Error handling is implemented but does not include logging or advanced monitoring
 
 ---
 
 ## Future improvements
 
 - Add password strength validation using regex
-- Add custom 404 and 500 error pages
 - Potentially introduce Flask-Migrate for future schema changes
 
 ---

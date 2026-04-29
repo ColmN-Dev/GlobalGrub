@@ -14,7 +14,7 @@
 
 ## Overview
 
-GlobalGrub is a Flask web application I built to browse recipes from around the world using TheMealDB API. The app focuses on server-side rendering, clean routing, and a structured backend, while keeping frontend JavaScript minimal and purposeful.
+GlobalGrub is a Flask web application I built to browse recipes from around the world using TheMealDB API. The app focuses on server-side rendering, clean routing, and a structured backend, while keeping frontend JavaScript minimal and focused on enhancing usability.
 
 Users can search for recipes, filter by region, view detailed meal information, and save favourites through an authenticated account system.
 
@@ -27,7 +27,8 @@ Users can search for recipes, filter by region, view detailed meal information, 
 - Detailed recipe pages with dynamically built ingredient lists  
 - User authentication system (signup, login, logout)  
 - Favourite recipes system stored in SQLite  
-- Flash message feedback for user actions (login, signup, favourites)  
+- Flash message feedback for user actions (login, signup, favourites) 
+- Custom error handling for 404 and 500 responses 
 - Profile page showing saved recipes and recent activity  
 - Responsive design with mobile navigation  
 - Accessibility improvements using ARIA attributes  
@@ -55,6 +56,7 @@ GlobalGrub/
 │
 ├── app.py                # Main Flask application (routes, auth, logic)
 ├── helpers.py            # API helper functions (TheMealDB integration)
+├── errors.py             # Custom error handler functions
 ├── templates/            # Jinja templates
 │   └── auth/             # Authentication templates
 ├── static/
@@ -133,15 +135,30 @@ To reduce cold start delays on the free tier, a cron job is used to periodically
 
 * Favourites require multiple API calls
 * No frontend form validation yet
-* No custom error pages implemented yet
 
 ---
 
 ## Planned Improvements
 
 * Add regex-based password validation
-* Implement custom 404 and 500 error pages
 * Expand UI feedback and validation
+
+---
+
+## Screenshots
+
+ - **Homepage**
+
+  ![Homepage screenshot](static/images/Home_ss.png)
+
+ - **Login**
+
+  ![Login screenshot](static/images/Login_ss.png)
+
+ - **Profile**
+
+  ![Profile screenshot](static/images/Profile_ss.png)
+
 
 ---
 
