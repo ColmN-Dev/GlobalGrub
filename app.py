@@ -8,8 +8,7 @@ from flask_login import LoginManager, UserMixin, login_user, logout_user, login_
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from dotenv import load_dotenv
-from helpers import get_meal_by_id
-import requests
+from helpers import get_meal_by_id, search_meals, get_meals_by_region, get_countries
 import os
 
 # load local environment variables from .env
@@ -76,28 +75,10 @@ def home():
 
 @app.route("/countries")
 def countries():
-    countries_list = []
     message = None
 
-    try:
-        url = "https://www.themealdb.com/api/json/v1/1/list.php?a=list"
-
-        response = requests.get(url, timeout=10)
-        data = response.json()
-
-        # pull country names out of API response and sort them
-        countries_list = sorted(
-            [item.get("strArea", "") for item in (data.get("meals") or []) if item.get("strArea")],
-            key=str.lower
-        )
-
-        if not countries_list:
-            message = "No countries returned from API"
-
-    except requests.exceptions.RequestException:
-        message = "API request failed"
-    except Exception:
-        message = "An error occurred"
+    countries_list = get_countries()
+    message = None if countries_list else "No countries returned from API"
 
     return render_template("countries.html", countries=countries_list, message=message)
 
@@ -112,65 +93,52 @@ def recipes():
     meals = []
     message = None
 
-    try:
-        # search submitted with empty input
-        if "search" in request.args and search == "" and not region:
-            message = "Please enter something to search"
+    # search by meal name
+    if search:
+        meals = search_meals(search) or []
 
-        # search by meal name
-        elif search:
-            url = f"https://www.themealdb.com/api/json/v1/1/search.php?s={search}"
+        if not meals:
+            message = f"No Results found for: {search}"
 
-            response = requests.get(url, timeout=10)
-            data = response.json()
+    # otherwise filter by region
+    elif region:
+        meals = get_meals_by_region(region) or []
 
-            # API can return None for meals
-            meals = data.get("meals") or []
+        if not meals:
+            message = f"No Results found for: {region}"
 
-            # optional dessert-only filter
-            if course == "dessert":
-                meals = [
-                    m for m in meals
-                    if (m.get("strCategory") or "").lower() == "dessert"
-                ]
+    # empty search case
+    elif "search" in request.args:
+        message = "Please enter a search term"
 
-            if not meals:
-                message = f"No Results found for: {search}"
+    # optional dessert-only filter
+    if course == "dessert" and meals:
+        meals = [
+            m for m in meals
+            if (m.get("strCategory") or "").lower() == "dessert"
+        ]
 
-        # otherwise filter by region
-        elif region:
-            url = f"https://www.themealdb.com/api/json/v1/1/filter.php?a={region}"
-
-            response = requests.get(url, timeout=10)
-            data = response.json()
-
-            meals = data.get("meals") or []
-
-            if not meals:
-                message = f"No Results found for: {region}"
-
-    except requests.exceptions.RequestException:
-        message = "API request failed"
-    except Exception:
-        message = "An error occurred"
+        if not meals:
+            message = f"No Results found for: {search or region or 'dessert'}"
 
     return render_template(
-        "recipes.html", meals=meals, region=region, search=search, course=course, message=message)
+        "recipes.html",
+        meals=meals,
+        region=region,
+        search=search,
+        course=course,
+        message=message
+    )
 
 
-@app.route("/recipe/<id>")
-def recipe_detail(id):
-    try:
-        # fetch full recipe details by meal id
-        url = f"https://www.themealdb.com/api/json/v1/1/lookup.php?i={id}"
-
-        response = requests.get(url, timeout=10)
-        data = response.json()
-
-        if not data.get("meals"):
+@app.route("/recipe/<recipe_id>")
+def recipe_detail(recipe_id):
+    
+    try:       
+        meal = get_meal_by_id(recipe_id)
+        
+        if not meal:
             return "Recipe not found", 404
-
-        meal = data["meals"][0]
 
         ingredients = []
 
@@ -187,7 +155,7 @@ def recipe_detail(id):
 
         # set favourite button state for logged-in users
         if current_user.is_authenticated:
-            saved = Favourite.query.filter_by(user_id=current_user.id, recipe_id=id).first() is not None
+            saved = Favourite.query.filter_by(user_id=current_user.id, recipe_id=recipe_id).first() is not None
 
         return render_template("recipe.html", meal=meal, ingredients=ingredients, saved=saved)
 
@@ -225,14 +193,10 @@ def favourites():
     meals = []
     
     for fav in favs:
-        url = f"https://www.themealdb.com/api/json/v1/1/lookup.php?i={fav.recipe_id}"
-        response = requests.get(url, timeout=10)
-        data = response.json()
-
-        if data.get("meals"):
-            meals.append(data["meals"][0])
+        meal = get_meal_by_id(fav.recipe_id)
+        if meal:
+            meals.append(meal)
         
-    
     return render_template("favourites.html", meals=meals)
 
 
@@ -338,12 +302,9 @@ def profile():
     top3 = [] 
     
     for fav in favs:
-        url = f"https://www.themealdb.com/api/json/v1/1/lookup.php?i={fav.recipe_id}"
-        response = requests.get(url, timeout=10)
-        data = response.json()
-
-        if data.get("meals"):
-            top3.append(data["meals"][0])
+        meal = get_meal_by_id(fav.recipe_id)
+        if meal:
+            top3.append(meal)
     
     return render_template("auth/profile.html", total=total, top3=top3)
 
