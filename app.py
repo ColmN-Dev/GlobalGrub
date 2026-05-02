@@ -243,6 +243,16 @@ def signup():
         if not username or not password:
             flash("Username and password are required", "error")
             return render_template("auth/signup.html", username=username)
+        
+        # enforce password strength rules
+        if (
+            len(password) < 8
+            or not any(char.isdigit() for char in password)
+            or not any(char.isupper() for char in password)
+            or not any(char.islower() for char in password)
+        ):
+            flash("Password must be at least 8 characters, include uppercase, lowercase, and a number", "error")
+            return render_template("auth/signup.html", username=username)
 
         # check if user already exists in database
         existing_user = User.query.filter_by(username=username).first()

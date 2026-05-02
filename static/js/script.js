@@ -32,6 +32,40 @@
         });
     }
 
+    // Country search functionality
+    const countrySearch = document.getElementById("country-search");
+    const countryLinks = document.querySelectorAll(".country-link");
+    const noResults = document.getElementById("no-countries");
+
+    // Filter country links based on search input
+    if (countrySearch && countryLinks.length) {
+        countrySearch.addEventListener("input", () => {
+            const searchTerm = countrySearch.value.toLowerCase().trim();
+            // Track if any country links are visible after filtering
+            let isVisible = false;
+
+            countryLinks.forEach((link) => {
+                const countryName = link.textContent.toLowerCase().trim();
+
+                if (countryName.includes(searchTerm)) {
+                    link.style.display = "";
+                    isVisible = true;
+                } else {
+                    link.style.display = "none";
+                }
+            });
+
+            if (noResults) {
+                if (isVisible) {
+                    noResults.style.display = "none";
+                } else {
+                    noResults.style.display = "block";
+                }
+            }
+
+        });
+    }
+
     // Search input clear button functionality
     const searchForm = document.getElementById("searchForm");
     const searchInput = document.getElementById("mealSearch");
