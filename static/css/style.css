@@ -20,8 +20,8 @@ html {
 
 body {
     font-family: 'Times New Roman', serif;
-    background: url("/static/images/Background.png") center/cover no-repeat fixed;
-    background-attachment: scroll;
+    background: url("/static/images/Background.png") center/cover no-repeat;
+    background-attachment: fixed;
     background-size: cover;
     color: #fff;
     padding-top: 80px;
