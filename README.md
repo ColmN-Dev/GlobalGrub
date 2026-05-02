@@ -1,6 +1,6 @@
 # GlobalGrub
 
-**Last updated:** April 29, 2026
+**Last updated:** May 2, 2026
 
 ---
 
@@ -27,9 +27,10 @@ Users can search for recipes, filter by region, view detailed meal information, 
 - Detailed recipe pages with dynamically built ingredient lists  
 - User authentication system (signup, login, logout)  
 - Favourite recipes system stored in SQLite  
-- Flash message feedback for user actions (login, signup, favourites) 
-- Custom error handling for 404 and 500 responses 
+- Flash message feedback for user actions (login, signup, favourites)  
+- Custom error handling for 404 and 500 responses  
 - Profile page showing saved recipes and recent activity  
+- Live country search filtering (client-side, no page reload)  
 - Responsive design with mobile navigation  
 - Accessibility improvements using ARIA attributes  
 - Lazy-loaded images for performance optimisation  
@@ -51,7 +52,6 @@ Users can search for recipes, filter by region, view detailed meal information, 
 ## Project Structure
 
 ```
-
 GlobalGrub/
 │
 ├── app.py                # Main Flask application (routes, auth, logic)
@@ -64,7 +64,6 @@ GlobalGrub/
 │   └── js/script.js      # JavaScript functionality
 ├── Docs/Documentation.md # Full project documentation
 └── requirements.txt
-
 ```
 
 ---
@@ -133,32 +132,24 @@ To reduce cold start delays on the free tier, a cron job is used to periodically
 
 ## Current Limitations
 
-* Favourites require multiple API calls
-* No frontend form validation yet
-
----
-
-## Planned Improvements
-
-* Add regex-based password validation
-* Expand UI feedback and validation
+* Favourites and profile pages fetch API data one request per recipe, which could be optimised in future
+* Some countries in TheMealDB return no recipes, which is out of my control
 
 ---
 
 ## Screenshots
 
- - **Homepage**
+- **Homepage**
 
   ![Homepage screenshot](static/images/Home_ss.png)
 
- - **Login**
+- **Login**
 
   ![Login screenshot](static/images/Login_ss.png)
 
- - **Profile**
+- **Profile**
 
   ![Profile screenshot](static/images/Profile_ss.png)
-
 
 ---
 
@@ -176,13 +167,3 @@ This project was built using learning resources which were adapted into a custom
 * [https://www.geeksforgeeks.org/python/flask-message-flashing/](https://www.geeksforgeeks.org/python/flask-message-flashing/)
 
 ---
-
-## Assignment Status
-
-This project is currently in active development as part of a Python Flask module assignment.
-
----
-
-
-
- 

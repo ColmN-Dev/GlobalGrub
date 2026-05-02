@@ -1,6 +1,6 @@
 # GlobalGrub Documentation
 
-**Last updated:** April 29, 2026
+**Last updated:** May 2, 2026
 
 ---
 
@@ -150,6 +150,7 @@ https://flask.palletsprojects.com/en/stable/errorhandling/
 ### 11. JavaScript enhancements
 I added JavaScript features to improve usability:
 - mobile hamburger menu toggle
+- live search filtering on the countries page (client-side, no page reload)
 - password visibility toggle
 - loading spinner for recipe searches
 - ARIA attribute updates for accessibility
@@ -163,6 +164,12 @@ https://www.geeksforgeeks.org/javascript/show-hide-password-using-javascript/
 
 ### UI direction
 I originally planned a forest-style theme but changed it to a warm restaurant-style design to better suit food presentation and improve consistency.
+
+---
+
+### Countries page search
+TheMealDB updated their country list from 37 to 195 countries. Scrolling through that many entries 
+was impractical, especially on mobile, so I added a client-side search bar to filter results as the user types.
 
 ---
 
@@ -265,20 +272,29 @@ This improved the structure of the application and avoided import-related issues
 
 ---
 
+### 12. Password validation and JavaScript scope issue
+I initially tried to add password validation using a JavaScript regex pattern but it was 
+running outside of any event listener. This caused it to fire on every page load, including 
+after logout, creating unexpected alert popups on unrelated pages.
+
+I moved the validation into the Python signup route in `app.py` instead, using built-in 
+string checks to validate:
+- minimum 8 characters
+- at least one uppercase letter
+- at least one lowercase letter
+- at least one number
+
+This kept validation server-side, removed the scope issue, and kept the code readable.
+
+---
+
 ## Current limitations
 
-- API calls for favourites are not cached
-- No frontend form validation yet
-- Error handling is implemented but does not include logging or advanced monitoring
+- Favourites and profile pages fetch API data one request per recipe, which could be optimised in future
+- Some countries in TheMealDB return no recipes, which is out of my control
 
 ---
 
-## Future improvements
-
-- Add password strength validation using regex
-- Potentially introduce Flask-Migrate for future schema changes
-
----
 
 ## What I learned
 
